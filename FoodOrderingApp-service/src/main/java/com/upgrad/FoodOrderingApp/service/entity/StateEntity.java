@@ -2,10 +2,11 @@ package com.upgrad.FoodOrderingApp.service.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "state")
-public class StateEntity {
+public class StateEntity implements Serializable {
 
     @Id
     @Column(name = "id")
