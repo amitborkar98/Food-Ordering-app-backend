@@ -17,7 +17,7 @@ public class RestaurantCategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     RestaurantEntity restaurantEntity;

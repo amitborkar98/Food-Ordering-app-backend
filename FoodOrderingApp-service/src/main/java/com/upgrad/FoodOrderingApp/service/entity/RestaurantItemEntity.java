@@ -6,24 +6,24 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "category_item")
-public class CategoryItemEntity implements Serializable {
+@Table
+@Entity(name = "restaurant_item")
+public class RestaurantItemEntity implements Serializable {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "item_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     ItemEntity itemEntity;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    CategoryEntity categoryEntity;
+    RestaurantEntity restaurantEntity;
 
     public Integer getId() {
         return id;
@@ -32,5 +32,4 @@ public class CategoryItemEntity implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
 }
