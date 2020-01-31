@@ -30,9 +30,6 @@ public class ItemEntity implements Serializable {
     @Size(max = 10)
     private String type;
 
-    @ManyToMany(mappedBy = "categories",fetch = FetchType.EAGER)
-    private List<CategoryItemEntity> categories = new ArrayList<>();
-
     public Integer getId() {
         return id;
     }
@@ -73,7 +70,4 @@ public class ItemEntity implements Serializable {
         this.price = price;
     }
 
-    public List<CategoryItemEntity> getCategories() {
-        return categories;
-    }
 }
