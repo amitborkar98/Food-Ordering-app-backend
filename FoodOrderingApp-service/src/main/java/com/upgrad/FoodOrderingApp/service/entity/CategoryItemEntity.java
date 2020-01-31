@@ -1,16 +1,14 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
 @Entity
-@Table(name = "restaurant_category")
-public class RestaurantCategoryEntity {
+@Table(name = "category_item")
+public class CategoryItemEntity implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -18,9 +16,9 @@ public class RestaurantCategoryEntity {
     private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn(name = "item_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    RestaurantEntity restaurantEntity;
+    ItemEntity itemEntity;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -34,4 +32,5 @@ public class RestaurantCategoryEntity {
     public void setId(Integer id) {
         this.id = id;
     }
+
 }

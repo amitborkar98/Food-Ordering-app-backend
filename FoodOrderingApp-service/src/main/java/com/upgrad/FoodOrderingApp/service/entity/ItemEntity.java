@@ -3,6 +3,8 @@ package com.upgrad.FoodOrderingApp.service.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "item")
@@ -27,6 +29,9 @@ public class ItemEntity implements Serializable {
     @Column(name = "type")
     @Size(max = 10)
     private String type;
+
+    @ManyToMany(mappedBy = "categories",fetch = FetchType.EAGER)
+    private List<CategoryItemEntity> categories = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -66,5 +71,9 @@ public class ItemEntity implements Serializable {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public List<CategoryItemEntity> getCategories() {
+        return categories;
     }
 }

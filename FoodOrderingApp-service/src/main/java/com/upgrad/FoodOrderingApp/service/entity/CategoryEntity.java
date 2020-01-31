@@ -24,9 +24,6 @@ public class CategoryEntity implements Serializable {
         @Size(max = 255)
         private String category_name;
 
-        @ManyToMany(mappedBy = "categories",fetch = FetchType.EAGER)
-        private List<RestaurantCategoryEntity> restuarants = new ArrayList<>();
-
     public Integer getId() {
         return id;
     }
@@ -51,11 +48,4 @@ public class CategoryEntity implements Serializable {
         this.category_name = category_name;
     }
 
-    public List<RestaurantCategoryEntity> getRestuarants() {
-        return restuarants;
-    }
-
-    public void setRestuarants(List<RestaurantCategoryEntity> restuarants) {
-        this.restuarants = restuarants;
-    }
 }
