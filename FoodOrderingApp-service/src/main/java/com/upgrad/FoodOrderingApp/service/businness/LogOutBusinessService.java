@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+
 @Service
 public class LogOutBusinessService {
 
@@ -22,8 +24,16 @@ public class LogOutBusinessService {
         if(customerAuthEntity == null){
             throw new AuthorizationFailedException("ATHR-001" ,"Customer is not Logged in.");
         }
-
-
-        return customerAuthEntity.getCustomer();
+        else if(customerAuthEntity.getLogout_at() != null){
+            throw new AuthorizationFailedException("ATHR-002" ,"Customer is logged out. Log in again to access this endpoint.");
+        }
+        else if(customerAuthEntity.getExpires_at().isBefore(ZonedDateTime.now())){
+            throw new AuthorizationFailedException("ATHR-003" ,"Your session is expired. Log in again to access this endpoint.");
+        }
+        else {
+            customerAuthEntity.setLogout_at(ZonedDateTime.now());
+            customerDao.updateToken(customerAuthEntity);
+            return customerAuthEntity.getCustomer();
+        }
     }
 }
