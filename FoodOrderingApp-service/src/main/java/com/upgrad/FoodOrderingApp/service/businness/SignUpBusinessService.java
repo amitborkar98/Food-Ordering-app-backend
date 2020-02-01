@@ -42,6 +42,18 @@ public class SignUpBusinessService {
             if ((ch >= 'A' && ch <= 'Z')) not_number_count++;
         }
 
+        String password = customerEntity.getPassword();
+        int upper_case_count = 0;
+        int digit_count = 0;
+        int special_case_count =0;
+        for (int i = 0; i < password.length(); i++) {
+            char ch = password.charAt(i);
+            //to check if the password contains a alphabet
+            if (ch >= 'A' && ch <= 'Z') upper_case_count++;
+            else if (ch >= '0' && ch <= '9') digit_count++;
+            else if(ch == '#' || ch == '@' || ch == '$' || ch == '%' || ch == '&' || ch == '*' || ch == '!' || ch == '^') special_case_count++;
+        }
+
         if (customerDao.getCustomerByContact(customerEntity.getContact_number()) != null) {
             throw new SignUpRestrictedException("SGR-001", "This contact number is already registered! Try other contact number.");
         }
@@ -51,8 +63,11 @@ public class SignUpBusinessService {
         else if (charCount < 1 || dot_count < 1 || a_count < 1){
             throw new SignUpRestrictedException("(SGR-002", "Invalid email-id format!");
         }
-        else if(not_number_count > 0 || customerEntity.getContact_number().length() != 9){
+        else if(not_number_count > 0 || contact.length() != 10 ){
             throw new SignUpRestrictedException("(SGR-003", "Invalid contact number!");
+        }
+        else if(upper_case_count < 1 || digit_count < 1 || special_case_count < 1 || password.length() < 8){
+            throw new SignUpRestrictedException("(SGR-004", "Weak password!");
         }
         else {
             String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());
