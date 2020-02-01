@@ -32,4 +32,12 @@ public class CustomerDao {
         return customerAuthEntity;
     }
 
+    public CustomerAuthEntity getCustomerAuth(final String access_token) {
+        try {
+            return entityManager.createNamedQuery("getCustomerToken", CustomerAuthEntity.class).setParameter("access_token", access_token).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
 }
