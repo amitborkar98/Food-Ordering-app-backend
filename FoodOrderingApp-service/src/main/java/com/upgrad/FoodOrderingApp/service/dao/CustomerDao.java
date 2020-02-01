@@ -19,6 +19,10 @@ public class CustomerDao {
         return customerEntity;
     }
 
+    public CustomerEntity updateCustomer(CustomerEntity customerEntity){
+        return entityManager.merge(customerEntity);
+    }
+
     public CustomerEntity getCustomerByContact(final String contact_number){
         try {
             return entityManager.createNamedQuery("customerByContact", CustomerEntity.class).setParameter("contact_number", contact_number).getSingleResult();
