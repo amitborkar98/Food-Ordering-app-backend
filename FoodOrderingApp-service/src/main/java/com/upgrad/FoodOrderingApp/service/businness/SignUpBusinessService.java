@@ -20,6 +20,13 @@ public class SignUpBusinessService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity signupCustomer(CustomerEntity customerEntity)throws SignUpRestrictedException {
 
+
+        if (customerDao.getCustomerByContact(customerEntity.getContact_number()) != null) {
+            throw new SignUpRestrictedException("SGR-001", "This contact number is already registered! Try other contact number.");
+        }
+        if (customerEntity.getFirstname() == null || customerEntity.getContact_number() == null || customerEntity.getEmail() == null || customerEntity.getPassword() == null) {
+            throw new SignUpRestrictedException("(SGR-005", "Except last name all fields should be filled");
+        }
         String email = customerEntity.getEmail();
         int a_count = 0;
         int charCount = 0;
@@ -54,20 +61,14 @@ public class SignUpBusinessService {
             else if(ch == '#' || ch == '@' || ch == '$' || ch == '%' || ch == '&' || ch == '*' || ch == '!' || ch == '^') special_case_count++;
         }
 
-        if (customerDao.getCustomerByContact(customerEntity.getContact_number()) != null) {
-            throw new SignUpRestrictedException("SGR-001", "This contact number is already registered! Try other contact number.");
-        }
-        else if (customerEntity.getFirstname() == null || customerEntity.getContact_number() == null || customerEntity.getEmail() == null || customerEntity.getPassword() == null) {
-            throw new SignUpRestrictedException("(SGR-005", "Except last name all fields should be filled");
-        }
-        else if (charCount < 1 || dot_count < 1 || a_count < 1){
+        if (charCount < 1 || dot_count < 1 || a_count < 1){
             throw new SignUpRestrictedException("(SGR-002", "Invalid email-id format!");
         }
         else if(not_number_count > 0 || contact.length() != 10 ){
             throw new SignUpRestrictedException("(SGR-003", "Invalid contact number!");
         }
         else if(upper_case_count < 1 || digit_count < 1 || special_case_count < 1 || password.length() < 8){
-            throw new SignUpRestrictedException("(SGR-004", "Weak password!");
+            throw new SignUpRestrictedException("SGR-004", "Weak password!");
         }
         else {
             String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());

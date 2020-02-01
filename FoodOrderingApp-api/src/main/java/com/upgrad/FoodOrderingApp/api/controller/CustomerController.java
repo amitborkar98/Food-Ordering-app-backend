@@ -1,10 +1,7 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.upgrad.FoodOrderingApp.api.model.*;
-import com.upgrad.FoodOrderingApp.service.businness.LogInBusinessService;
-import com.upgrad.FoodOrderingApp.service.businness.LogOutBusinessService;
-import com.upgrad.FoodOrderingApp.service.businness.SignUpBusinessService;
-import com.upgrad.FoodOrderingApp.service.businness.UpdateCustomerBusinessService;
+import com.upgrad.FoodOrderingApp.service.businness.*;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
@@ -106,5 +103,18 @@ public class CustomerController {
         return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse, HttpStatus.OK);
      }
 
+     @Autowired
+    UpdatePasswordBusinessService updatePasswordBusinessService;
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/customer/password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+     public ResponseEntity<UpdatePasswordResponse> updatePassword(@RequestHeader("authorization") final String authorization,
+                                                                  final UpdatePasswordRequest updatePasswordRequest) throws UpdateCustomerException, AuthorizationFailedException{
+
+        String decode = authorization.split("Bearer ")[1];
+        CustomerEntity customerEntity = updatePasswordBusinessService.updatePassword(decode, updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
+
+        UpdatePasswordResponse updatePasswordResponse = new UpdatePasswordResponse().id(customerEntity.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
+        return new ResponseEntity<UpdatePasswordResponse>(updatePasswordResponse, HttpStatus.OK);
+     }
 }
 
