@@ -16,7 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -55,17 +57,20 @@ public class CustomerController {
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
 
+
         CustomerAuthEntity customerAuthEntity = logInBusinessService.logIn(decodedArray[0],decodedArray[1]);
         CustomerEntity customerEntity = customerAuthEntity.getCustomer();
 
         LoginResponse loginResponse = new LoginResponse().id(customerEntity.getUuid()).message("LOGGED IN SUCCESSFULLY").firstName(customerEntity.getFirstname()).lastName(customerEntity.getLastname()).emailAddress(customerEntity.getEmail()).contactNumber(customerEntity.getContact_number());
 
+        List<String> header = new ArrayList<>();
+        header.add("access-token");
 
-        HttpHeaders httpHeaders=new HttpHeaders();
-        httpHeaders.add("access-token", customerAuthEntity.getAccess_token());
-        return new ResponseEntity<LoginResponse>(loginResponse,httpHeaders, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("access-token", customerAuthEntity.getAccess_token());
+        headers.setAccessControlExposeHeaders(header);
 
-
+        return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
      }
 
 }

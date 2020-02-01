@@ -42,9 +42,9 @@ public class LogInBusinessService {
             customerAuthEntity.setUuid(UUID.randomUUID().toString());
             customerAuthEntity.setLogin_at(now);
             customerAuthEntity.setExpires_at(expiresAt);
-            final CustomerAuthEntity genratedToken = customerDao.createToken(customerAuthEntity);
 
-            return genratedToken;
+            return customerDao.createToken(customerAuthEntity);
+
         }
         else {
             throw new AuthenticationFailedException("ATH-002", "Invalid Credentials");
