@@ -89,4 +89,11 @@ public class CustomerAuthEntity implements Serializable {
     public void setLogout_at(ZonedDateTime logout_at) {
         this.logout_at = logout_at;
     }
+
+    public CustomerEntity getCustomer(){ return  customerEntity; }
+
+    public void setCustomer(CustomerEntity customerEntity) {
+        this.customerEntity = customerEntity;
+    }
+
 }
