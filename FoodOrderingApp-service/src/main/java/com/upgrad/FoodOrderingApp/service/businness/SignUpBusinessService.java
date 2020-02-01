@@ -23,6 +23,9 @@ public class SignUpBusinessService {
         if (customerDao.getCustomerByContact(customerEntity.getContact_number()) != null) {
             throw new SignUpRestrictedException("SGR-001", "This contact number is already registered! Try other contact number.");
         }
+        else if(customerEntity.getFirstname() == null || customerEntity.getContact_number() == null || customerEntity.getEmail() == null || customerEntity.getPassword() == null) {
+            throw new SignUpRestrictedException("(SGR-005", "Except last name all fields should be filled");
+        }
         else {
             String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());
             customerEntity.setSalt(encryptedText[0]);
