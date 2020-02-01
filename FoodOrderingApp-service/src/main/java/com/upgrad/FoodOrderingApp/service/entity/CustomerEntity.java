@@ -7,6 +7,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "customer")
+@NamedQueries({
+        @NamedQuery(name = "customerByContact", query = "select u from CustomerEntity u where u.contact_number = :contact_number"),
+})
+
 public class CustomerEntity implements Serializable {
 
     @Id

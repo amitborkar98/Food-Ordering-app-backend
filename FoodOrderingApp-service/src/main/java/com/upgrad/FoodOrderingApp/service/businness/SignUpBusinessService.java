@@ -2,6 +2,7 @@ package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
+import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,12 +18,16 @@ public class SignUpBusinessService {
     CustomerDao customerDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CustomerEntity signupCustomer(CustomerEntity customerEntity){
+    public CustomerEntity signupCustomer(CustomerEntity customerEntity)throws SignUpRestrictedException {
 
-        String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());
-        customerEntity.setSalt(encryptedText[0]);
-        customerEntity.setPassword(encryptedText[1]);
-
-        return customerDao.createUser(customerEntity);
+        if (customerDao.getCustomerByContact(customerEntity.getContact_number()) != null) {
+            throw new SignUpRestrictedException("SGR-001", "This contact number is already registered! Try other contact number.");
+        }
+        else {
+            String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());
+            customerEntity.setSalt(encryptedText[0]);
+            customerEntity.setPassword(encryptedText[1]);
+            return customerDao.createCustomer(customerEntity);
+        }
     }
 }
