@@ -32,4 +32,21 @@ public class CustomerAddressEntity implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public CustomerEntity getCustomer() {
+        return this.customerEntity;
+    }
+
+    public void setCustomer(CustomerEntity customerEntity) {
+        this.customerEntity = customerEntity;
+    }
+
+    public AddressEntity getAddress() {
+        return this.addressEntity;
+    }
+
+    public void setAddress(AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
+    }
+
 }

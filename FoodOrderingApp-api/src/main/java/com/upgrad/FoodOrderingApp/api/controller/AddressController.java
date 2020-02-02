@@ -5,6 +5,7 @@ import com.upgrad.FoodOrderingApp.api.model.SaveAddressRequest;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressResponse;
 import com.upgrad.FoodOrderingApp.service.businness.SaveAdressBusinessService;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
+import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ public class AddressController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/address", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SaveAddressResponse> saveAdress(@RequestHeader("authorization") final String authorization,
-                                                          final SaveAddressRequest saveAddressRequest) throws AuthorizationFailedException, SaveAddressException {
+                                                          final SaveAddressRequest saveAddressRequest) throws AddressNotFoundException, AuthorizationFailedException, SaveAddressException {
 
-
+        String decode = authorization.split("Bearer ")[1];
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setUuid(UUID.randomUUID().toString());
         addressEntity.setFlat_buil_number(saveAddressRequest.getFlatBuildingName());
@@ -40,7 +41,7 @@ public class AddressController {
         addressEntity.setActive(1);
         String state_uuid = saveAddressRequest.getStateUuid();
 
-        AddressEntity savedAdress = saveAdressBusinessService.saveAdress(addressEntity, state_uuid);
+        AddressEntity savedAdress = saveAdressBusinessService.saveAdress(addressEntity, state_uuid, decode);
 
         SaveAddressResponse addressResponse = new SaveAddressResponse().id(savedAdress.getUuid()).status("ADDRESS SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SaveAddressResponse>(addressResponse, HttpStatus.CREATED);

@@ -41,8 +41,6 @@ public class AddressEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     StateEntity stateEntity;
 
-    @OneToMany
-    CustomerAddressEntity customerAddressEntity;
 
     @Column(name = "active")
     private Integer active;
