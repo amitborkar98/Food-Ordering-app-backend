@@ -52,12 +52,12 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.POST, path = "/customer/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
      public ResponseEntity<LoginResponse> login(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
 
+
         byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
 
-
-        CustomerAuthEntity customerAuthEntity = logInBusinessService.logIn(decodedArray[0],decodedArray[1]);
+        CustomerAuthEntity customerAuthEntity = logInBusinessService.logIn(decodedArray);
         CustomerEntity customerEntity = customerAuthEntity.getCustomer();
 
         LoginResponse loginResponse = new LoginResponse().id(customerEntity.getUuid()).message("LOGGED IN SUCCESSFULLY").firstName(customerEntity.getFirstname()).lastName(customerEntity.getLastname()).emailAddress(customerEntity.getEmail()).contactNumber(customerEntity.getContact_number());
@@ -78,7 +78,8 @@ public class CustomerController {
      @RequestMapping(method = RequestMethod.POST, path = "/customer/logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
      public ResponseEntity<LogoutResponse> logout(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
 
-        CustomerEntity customerEntity = logOutBusinessService.logout(authorization);
+         String decode = authorization.split("Bearer ")[1];
+        CustomerEntity customerEntity = logOutBusinessService.logout(decode);
 
         LogoutResponse logoutResponse = new LogoutResponse().id(customerEntity.getUuid()).message("LOGGED OUT SUCCESSFULLY");
         return new ResponseEntity<LogoutResponse>(logoutResponse, HttpStatus.OK);

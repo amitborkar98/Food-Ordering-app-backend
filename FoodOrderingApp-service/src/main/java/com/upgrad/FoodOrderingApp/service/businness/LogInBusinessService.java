@@ -22,16 +22,23 @@ public class LogInBusinessService {
     PasswordCryptographyProvider passwordCryptographyProvider;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CustomerAuthEntity logIn(String contact_number, String password) throws AuthenticationFailedException {
+    public CustomerAuthEntity logIn(String [] decode) throws AuthenticationFailedException {
+
+
+        if (decode.length == 0) {
+            throw new AuthenticationFailedException("ATH-003", "Incorrect format of decoded customer name and password");
+        }
+
+        String contact_number = decode[0];
+        String password = decode[1];
 
         CustomerEntity customer = customerDao.getCustomerByContact(contact_number);
-        final String encryptedPassword = passwordCryptographyProvider.encrypt(password, customer.getSalt());
-
         if (customer == null) {
             throw new AuthenticationFailedException("ATH-001", "This contact number has not been registered!");
         }
 
-        else if (encryptedPassword.equals(customer.getPassword())) {
+        final String encryptedPassword = passwordCryptographyProvider.encrypt(password, customer.getSalt());
+        if (encryptedPassword.equals(customer.getPassword())) {
 
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             CustomerAuthEntity customerAuthEntity = new CustomerAuthEntity();
@@ -49,6 +56,5 @@ public class LogInBusinessService {
         else {
             throw new AuthenticationFailedException("ATH-002", "Invalid Credentials");
         }
-
     }
 }

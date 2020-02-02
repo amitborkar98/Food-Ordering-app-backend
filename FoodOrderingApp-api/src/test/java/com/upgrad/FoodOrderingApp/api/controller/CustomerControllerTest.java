@@ -131,8 +131,6 @@ public class CustomerControllerTest {
         verify(mockCustomerService, times(1)).saveCustomer(any());
     }
 
-
-
     // ----------------------------- POST /customer/login --------------------------------
 
     //This test case passes when you are able to login successfully.
