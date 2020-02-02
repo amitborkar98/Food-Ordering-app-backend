@@ -15,12 +15,12 @@ public class CustomerAddressEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     CustomerEntity customerEntity;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "address_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     AddressEntity addressEntity;

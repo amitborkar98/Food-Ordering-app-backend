@@ -41,6 +41,9 @@ public class AddressEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     StateEntity stateEntity;
 
+    @OneToMany
+    CustomerAddressEntity customerAddressEntity;
+
     @Column(name = "active")
     private Integer active;
 
@@ -99,4 +102,13 @@ public class AddressEntity implements Serializable {
     public void setActive(Integer active) {
         this.active = active;
     }
+
+    public StateEntity getState(){
+        return this.stateEntity;
+    }
+
+    public void setState(StateEntity stateEntity){
+        this.stateEntity = stateEntity;
+    }
+
 }
