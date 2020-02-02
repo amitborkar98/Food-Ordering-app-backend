@@ -2,8 +2,10 @@ package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.upgrad.FoodOrderingApp.api.model.*;
 import com.upgrad.FoodOrderingApp.service.businness.GetAddressBusinessService;
+import com.upgrad.FoodOrderingApp.service.businness.GetStatesBusinessService;
 import com.upgrad.FoodOrderingApp.service.businness.SaveAdressBusinessService;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
+import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
@@ -78,4 +80,25 @@ public class AddressController {
         AddressListResponse addressListResponse = new AddressListResponse().addresses(addressLists);
         return new ResponseEntity<AddressListResponse>(addressListResponse, HttpStatus.OK);
     }
+
+    @Autowired
+    GetStatesBusinessService getStatesBusinessService;
+
+    @RequestMapping(method = RequestMethod.GET, path = "/states")
+    public ResponseEntity<StatesListResponse> getAllStates(){
+
+        List<StateEntity> stateEntities = getStatesBusinessService.getAllStates();
+        List<StatesList> statesLists = new ArrayList<>();
+
+        for(StateEntity s : stateEntities){
+            StatesList state = new StatesList();
+            state.setId(UUID.fromString(s.getUuid()));
+            state.setStateName(s.getState_name());
+            statesLists.add(state);
+        }
+
+        StatesListResponse statesListResponse = new StatesListResponse().states(statesLists);
+        return new ResponseEntity<StatesListResponse>(statesListResponse, HttpStatus.OK);
+    }
+
 }

@@ -39,4 +39,10 @@ public class AddressDao {
         TypedQuery<AddressEntity> query =entityManager.createQuery("SELECT p from AddressEntity p", AddressEntity.class);
         return query.getResultList();
     }
+
+    public List<StateEntity> getAllStates(){
+        TypedQuery<StateEntity> query =entityManager.createQuery("SELECT p from StateEntity p", StateEntity.class);
+        return query.getResultList();
+    }
+
 }
