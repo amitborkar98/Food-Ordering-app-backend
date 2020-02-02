@@ -1,8 +1,7 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
-
-import com.upgrad.FoodOrderingApp.api.model.SaveAddressRequest;
-import com.upgrad.FoodOrderingApp.api.model.SaveAddressResponse;
+import com.upgrad.FoodOrderingApp.api.model.*;
+import com.upgrad.FoodOrderingApp.service.businness.GetAddressBusinessService;
 import com.upgrad.FoodOrderingApp.service.businness.SaveAdressBusinessService;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
@@ -17,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.ws.Response;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,7 +28,7 @@ public class AddressController {
     SaveAdressBusinessService saveAdressBusinessService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/address", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SaveAddressResponse> saveAdress(@RequestHeader("authorization") final String authorization,
+    public ResponseEntity<SaveAddressResponse> saveAddress(@RequestHeader("authorization") final String authorization,
                                                           final SaveAddressRequest saveAddressRequest) throws AddressNotFoundException, AuthorizationFailedException, SaveAddressException {
 
         String decode = authorization.split("Bearer ")[1];
@@ -45,5 +45,37 @@ public class AddressController {
 
         SaveAddressResponse addressResponse = new SaveAddressResponse().id(savedAdress.getUuid()).status("ADDRESS SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SaveAddressResponse>(addressResponse, HttpStatus.CREATED);
+    }
+
+    @Autowired
+    GetAddressBusinessService getAddressBusinessService;
+
+    @RequestMapping(method = RequestMethod.GET, path = "/address/customer", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AddressListResponse> getAllAddress(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException{
+
+
+        String decode = authorization.split("Bearer ")[1];
+        List<AddressEntity> addressEntities = getAddressBusinessService.getAllAdress(decode);
+        List<AddressList> addressLists = new ArrayList<>();
+
+        for(AddressEntity s : addressEntities) {
+
+            AddressList address = new AddressList();
+
+            AddressListState state = new AddressListState();
+            state.setId(UUID.fromString(s.getState().getUuid()));
+            state.setStateName(s.getState().getState_name());
+
+            address.setId(UUID.fromString(s.getUuid()));
+            address.setPincode(s.getPincode());
+            address.setLocality(s.getLocality());
+            address.setFlatBuildingName(s.getFlat_buil_number());
+            address.setCity(s.getCity());
+            address.setState(state);
+
+            addressLists.add(address);
+        }
+        AddressListResponse addressListResponse = new AddressListResponse().addresses(addressLists);
+        return new ResponseEntity<AddressListResponse>(addressListResponse, HttpStatus.OK);
     }
 }
