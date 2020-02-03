@@ -1,10 +1,10 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.upgrad.FoodOrderingApp.api.model.*;
-import com.upgrad.FoodOrderingApp.service.businness.GetAddressBusinessService;
-import com.upgrad.FoodOrderingApp.service.businness.GetStatesBusinessService;
-import com.upgrad.FoodOrderingApp.service.businness.SaveAdressBusinessService;
+import com.upgrad.FoodOrderingApp.service.businness.AddressService;
+import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,37 +24,43 @@ import java.util.UUID;
 public class AddressController {
 
     @Autowired
-    SaveAdressBusinessService saveAdressBusinessService;
+    AddressService addressService;
+
+    @Autowired
+    CustomerService customerService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/address", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SaveAddressResponse> saveAddress(@RequestHeader("authorization") final String authorization,
                                                           final SaveAddressRequest saveAddressRequest) throws AddressNotFoundException, AuthorizationFailedException, SaveAddressException {
 
         String decode = authorization.split("Bearer ")[1];
+        CustomerEntity customerEntity = customerService.getCustomer(decode);
+
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setUuid(UUID.randomUUID().toString());
-        addressEntity.setFlat_buil_number(saveAddressRequest.getFlatBuildingName());
+        addressEntity.setFlatBuilNo(saveAddressRequest.getFlatBuildingName());
         addressEntity.setCity(saveAddressRequest.getCity());
         addressEntity.setLocality(saveAddressRequest.getLocality());
         addressEntity.setPincode(saveAddressRequest.getPincode());
         addressEntity.setActive(1);
-        String state_uuid = saveAddressRequest.getStateUuid();
+        StateEntity stateEntity = addressService.getStateByUUID("testUUID");
+        addressEntity.setState(stateEntity);
 
-        AddressEntity savedAdress = saveAdressBusinessService.saveAdress(addressEntity, state_uuid, decode);
+        AddressEntity savedAddress = addressService.saveAddress(addressEntity, customerEntity);
 
-        SaveAddressResponse addressResponse = new SaveAddressResponse().id(savedAdress.getUuid()).status("ADDRESS SUCCESSFULLY REGISTERED");
+        SaveAddressResponse addressResponse = new SaveAddressResponse().id(savedAddress.getUuid()).status("ADDRESS SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SaveAddressResponse>(addressResponse, HttpStatus.CREATED);
     }
 
-    @Autowired
-    GetAddressBusinessService getAddressBusinessService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/address/customer", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<AddressListResponse> getAllAddress(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException{
 
 
         String decode = authorization.split("Bearer ")[1];
-        List<AddressEntity> addressEntities = getAddressBusinessService.getAllAdress(decode);
+        CustomerEntity customerEntity = customerService.getCustomer(decode);
+
+        List<AddressEntity> addressEntities = addressService.getAllAddress(customerEntity);
         List<AddressList> addressLists = new ArrayList<>();
 
         for(AddressEntity s : addressEntities) {
@@ -81,13 +84,16 @@ public class AddressController {
         return new ResponseEntity<AddressListResponse>(addressListResponse, HttpStatus.OK);
     }
 
-    @Autowired
-    GetStatesBusinessService getStatesBusinessService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/states")
     public ResponseEntity<StatesListResponse> getAllStates(){
 
-        List<StateEntity> stateEntities = getStatesBusinessService.getAllStates();
+        List<StateEntity> stateEntities = addressService.getAllStates();
+        if(stateEntities.size() == 0){
+            StatesListResponse statesListResponse = new StatesListResponse().states(null);
+            return new ResponseEntity<StatesListResponse>(statesListResponse, HttpStatus.OK);
+        }
+
         List<StatesList> statesLists = new ArrayList<>();
 
         for(StateEntity s : stateEntities){

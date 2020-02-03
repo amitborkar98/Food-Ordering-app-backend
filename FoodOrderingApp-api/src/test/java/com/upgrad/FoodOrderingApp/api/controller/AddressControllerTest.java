@@ -1,4 +1,3 @@
-/*
 package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -183,7 +183,7 @@ public class AddressControllerTest {
         verify(mockAddressService, times(1)).saveAddress(any(), any());
     }
 
-
+/*
     // ------------------------------------------ DELETE /address/{address_id} ------------------------------------------
 
     //This test case passes when you can successfully delete an address.
@@ -305,7 +305,7 @@ public class AddressControllerTest {
         verify(mockAddressService, times(1)).getAddressByUUID("82849cd5-106e-4b34-b9bf-94954c6ff527", customerEntity);
         verify(mockAddressService, times(0)).deleteAddress(any());
     }
-
+*/
     // ------------------------------------------ GET /address/customer ------------------------------------------
 
     //This test case passes when you are able to retrieve all the saved address of a customer.
@@ -364,6 +364,7 @@ public class AddressControllerTest {
         verify(mockAddressService, times(0)).getAllAddress(any());
     }
 
+
     //This test case passes when you have handled the exception of trying to fetch addresses for any customer with while
     // the customer is currently signed out.
     @Test
@@ -381,6 +382,7 @@ public class AddressControllerTest {
         verify(mockAddressService, times(0)).getAllAddress(any());
     }
 
+
     //This test case passes when you have handled the exception of trying to fetch addresses for any customer while
     // the session of that customer is already expired.
     @Test
@@ -389,7 +391,7 @@ public class AddressControllerTest {
                 .thenThrow(new AuthorizationFailedException("ATHR-003", "Your session is expired. Log in again to access this endpoint."));
 
         mockMvc
-                .perform(delete("/address/customer")
+                .perform(get("/address/customer")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                         .header("authorization", "Bearer database_accesstoken1"))
                 .andExpect(status().isForbidden())
@@ -434,4 +436,3 @@ public class AddressControllerTest {
         assertNull(statesLists.getStates());
     }
 }
-*/

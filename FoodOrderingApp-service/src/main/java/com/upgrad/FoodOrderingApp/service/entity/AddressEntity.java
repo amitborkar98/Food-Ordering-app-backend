@@ -65,7 +65,7 @@ public class AddressEntity implements Serializable {
         return flat_buil_number;
     }
 
-    public void setFlat_buil_number(String flat_buil_number) {
+    public void setFlatBuilNo(String flat_buil_number) {
         this.flat_buil_number = flat_buil_number;
     }
 

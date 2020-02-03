@@ -84,7 +84,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(SaveAddressException.class)
     public ResponseEntity<ErrorResponse> SaveAddressException(SaveAddressException exc, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code(exc.getCode()).message(exc.getErrorMessage()), HttpStatus.CONFLICT
+                new ErrorResponse().code(exc.getCode()).message(exc.getErrorMessage()), HttpStatus.BAD_REQUEST
         );
     }
 

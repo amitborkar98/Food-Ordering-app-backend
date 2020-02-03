@@ -26,41 +26,38 @@ import java.util.UUID;
 public class CustomerController {
 
     @Autowired
-    SignUpBusinessService signUpBusinessService;
+    CustomerService customerService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/customer/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SignupCustomerResponse> signup(final SignupCustomerRequest signupCustomerRequest) throws SignUpRestrictedException {
+    public ResponseEntity<SignupCustomerResponse> signup( final SignupCustomerRequest signupCustomerRequest) throws SignUpRestrictedException {
 
         CustomerEntity customerEntity = new CustomerEntity();
         customerEntity.setUuid(UUID.randomUUID().toString());
-        customerEntity.setFirstname(signupCustomerRequest.getFirstName());
-        customerEntity.setLastname(signupCustomerRequest.getLastName());
+        customerEntity.setFirstName(signupCustomerRequest.getFirstName());
+        customerEntity.setLastName(signupCustomerRequest.getLastName());
         customerEntity.setContact_number(signupCustomerRequest.getContactNumber());
         customerEntity.setEmail(signupCustomerRequest.getEmailAddress());
         customerEntity.setPassword(signupCustomerRequest.getPassword());
         customerEntity.setSalt("1234abc");
 
-        final CustomerEntity registeredCustomer = signUpBusinessService.signupCustomer(customerEntity);
+        final CustomerEntity registeredCustomer = customerService.saveCustomer(customerEntity);
 
         SignupCustomerResponse signupCustomerResponse = new SignupCustomerResponse().id(registeredCustomer.getUuid()).status("CUSTOMER SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SignupCustomerResponse>(signupCustomerResponse, HttpStatus.CREATED);
     }
 
-    @Autowired
-    LogInBusinessService logInBusinessService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/customer/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-     public ResponseEntity<LoginResponse> login(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
-
+     public ResponseEntity<LoginResponse> authenticate(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
 
         byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
 
-        CustomerAuthEntity customerAuthEntity = logInBusinessService.logIn(decodedArray);
+        CustomerAuthEntity customerAuthEntity = customerService.authenticate(decodedArray[0], decodedArray[1]);
         CustomerEntity customerEntity = customerAuthEntity.getCustomer();
 
-        LoginResponse loginResponse = new LoginResponse().id(customerEntity.getUuid()).message("LOGGED IN SUCCESSFULLY").firstName(customerEntity.getFirstname()).lastName(customerEntity.getLastname()).emailAddress(customerEntity.getEmail()).contactNumber(customerEntity.getContact_number());
+        LoginResponse loginResponse = new LoginResponse().id(customerEntity.getUuid()).message("LOGGED IN SUCCESSFULLY").firstName(customerEntity.getFirstname()).lastName(customerEntity.getLastame()).emailAddress(customerEntity.getEmail()).contactNumber(customerEntity.getContact_number());
 
         List<String> header = new ArrayList<>();
         header.add("access-token");
@@ -72,49 +69,42 @@ public class CustomerController {
         return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
      }
 
-     @Autowired
-     LogOutBusinessService logOutBusinessService;
 
      @RequestMapping(method = RequestMethod.POST, path = "/customer/logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
      public ResponseEntity<LogoutResponse> logout(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
 
          String decode = authorization.split("Bearer ")[1];
-        CustomerEntity customerEntity = logOutBusinessService.logout(decode);
+         CustomerAuthEntity customerAuthEntity= customerService.logout(decode);
+         LogoutResponse logoutResponse = new LogoutResponse().id(customerAuthEntity.getCustomer().getUuid()).message("LOGGED OUT SUCCESSFULLY");
 
-        LogoutResponse logoutResponse = new LogoutResponse().id(customerEntity.getUuid()).message("LOGGED OUT SUCCESSFULLY");
         return new ResponseEntity<LogoutResponse>(logoutResponse, HttpStatus.OK);
      }
 
-     @Autowired
-     UpdateCustomerBusinessService updateCustomerBusinessService;
 
      @RequestMapping(method = RequestMethod.PUT, path = "/customer", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
      public ResponseEntity<UpdateCustomerResponse> updateCustomer(@RequestHeader("authorization") final String authorization,
-                                                                  final UpdateCustomerRequest updateCustomerRequest) throws AuthorizationFailedException, UpdateCustomerException {
+                                                                  final UpdateCustomerRequest updateCustomerRequest) throws UpdateCustomerException, AuthorizationFailedException {
 
          String decode = authorization.split("Bearer ")[1];
 
-        CustomerEntity customerEntity = new CustomerEntity();
-        customerEntity.setFirstname(updateCustomerRequest.getFirstName());
-        customerEntity.setLastname(updateCustomerRequest.getLastName());
+         CustomerEntity customerEntity = customerService.getCustomer(decode);
+         customerEntity.setFirstName(updateCustomerRequest.getFirstName());
+         customerEntity.setLastName(updateCustomerRequest.getLastName());
+         CustomerEntity updatedCustomer = customerService.updateCustomer(customerEntity);
 
-        CustomerEntity updatedCustomer =updateCustomerBusinessService.updateCustomer(decode, customerEntity);
-
-        UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse().id(updatedCustomer.getUuid()).firstName(updatedCustomer.getFirstname()).lastName(updatedCustomer.getLastname()).status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
-        return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse, HttpStatus.OK);
+         UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse().id(updatedCustomer.getUuid()).firstName(updatedCustomer.getFirstname()).lastName(updatedCustomer.getLastame()).status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
+         return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse, HttpStatus.OK);
      }
-
-     @Autowired
-    UpdatePasswordBusinessService updatePasswordBusinessService;
 
     @RequestMapping(method = RequestMethod.PUT, path = "/customer/password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
      public ResponseEntity<UpdatePasswordResponse> updatePassword(@RequestHeader("authorization") final String authorization,
                                                                   final UpdatePasswordRequest updatePasswordRequest) throws UpdateCustomerException, AuthorizationFailedException{
 
         String decode = authorization.split("Bearer ")[1];
-        CustomerEntity customerEntity = updatePasswordBusinessService.updatePassword(decode, updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
+        CustomerEntity customerEntity = customerService.getCustomer(decode);
+        CustomerEntity updateCustomerPassword = customerService.updateCustomerPassword(updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword(), customerEntity);
 
-        UpdatePasswordResponse updatePasswordResponse = new UpdatePasswordResponse().id(customerEntity.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
+        UpdatePasswordResponse updatePasswordResponse = new UpdatePasswordResponse().id(updateCustomerPassword.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
         return new ResponseEntity<UpdatePasswordResponse>(updatePasswordResponse, HttpStatus.OK);
      }
 }

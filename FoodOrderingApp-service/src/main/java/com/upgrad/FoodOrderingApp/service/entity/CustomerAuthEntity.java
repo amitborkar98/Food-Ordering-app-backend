@@ -66,7 +66,7 @@ public class CustomerAuthEntity implements Serializable {
         return access_token;
     }
 
-    public void setAccess_token(String access_token) {
+    public void setAccessToken(String access_token) {
         this.access_token = access_token;
     }
 
