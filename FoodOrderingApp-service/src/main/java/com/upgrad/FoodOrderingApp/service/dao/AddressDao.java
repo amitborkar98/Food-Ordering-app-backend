@@ -26,6 +26,14 @@ public class AddressDao {
         }
     }
 
+    public AddressEntity getAddressById(final String uuid){
+        try {
+            return entityManager.createNamedQuery("getAdressId", AddressEntity.class).setParameter("uuid", uuid).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
     public AddressEntity saveAdress(AddressEntity addressEntity){
         entityManager.persist(addressEntity);
         return addressEntity;
@@ -45,4 +53,12 @@ public class AddressDao {
         return query.getResultList();
     }
 
+    public List<CustomerAddressEntity> getAllCustomerAddress(){
+        TypedQuery<CustomerAddressEntity> query =entityManager.createQuery("SELECT p from CustomerAddressEntity p", CustomerAddressEntity.class);
+        return query.getResultList();
+    }
+
+    public void deleteAddress(AddressEntity addressEntity){
+        entityManager.remove(addressEntity);
+    }
 }

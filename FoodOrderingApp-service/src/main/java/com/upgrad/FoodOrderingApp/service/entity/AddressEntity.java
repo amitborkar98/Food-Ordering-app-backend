@@ -6,9 +6,14 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "address")
+@NamedQueries({
+        @NamedQuery(name = "getAdressId", query = "select ut from AddressEntity ut where ut.uuid =:uuid")
+})
 public class AddressEntity implements Serializable {
 
     @Id

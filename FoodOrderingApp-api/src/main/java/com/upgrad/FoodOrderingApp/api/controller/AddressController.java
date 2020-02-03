@@ -44,7 +44,8 @@ public class AddressController {
         addressEntity.setPincode(saveAddressRequest.getPincode());
         addressEntity.setActive(1);
         StateEntity stateEntity = addressService.getStateByUUID("testUUID");
-        addressEntity.setState(stateEntity);
+        StateEntity stateEntity1 =addressService.getStateByUUIDNotForTest(saveAddressRequest.getStateUuid());
+        addressEntity.setState(stateEntity1);
 
         AddressEntity savedAddress = addressService.saveAddress(addressEntity, customerEntity);
 
@@ -56,13 +57,10 @@ public class AddressController {
     @RequestMapping(method = RequestMethod.GET, path = "/address/customer", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<AddressListResponse> getAllAddress(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException{
 
-
         String decode = authorization.split("Bearer ")[1];
         CustomerEntity customerEntity = customerService.getCustomer(decode);
-
         List<AddressEntity> addressEntities = addressService.getAllAddress(customerEntity);
         List<AddressList> addressLists = new ArrayList<>();
-
         for(AddressEntity s : addressEntities) {
 
             AddressList address = new AddressList();
@@ -87,24 +85,35 @@ public class AddressController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/states")
     public ResponseEntity<StatesListResponse> getAllStates(){
-
         List<StateEntity> stateEntities = addressService.getAllStates();
         if(stateEntities.size() == 0){
             StatesListResponse statesListResponse = new StatesListResponse().states(null);
             return new ResponseEntity<StatesListResponse>(statesListResponse, HttpStatus.OK);
         }
-
         List<StatesList> statesLists = new ArrayList<>();
-
         for(StateEntity s : stateEntities){
             StatesList state = new StatesList();
             state.setId(UUID.fromString(s.getUuid()));
             state.setStateName(s.getState_name());
             statesLists.add(state);
         }
-
         StatesListResponse statesListResponse = new StatesListResponse().states(statesLists);
         return new ResponseEntity<StatesListResponse>(statesListResponse, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/address/{address_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<DeleteAddressResponse> deleteAddress(@RequestHeader("authorization") final String authorization,
+                                                               @PathVariable("address_id") String address_id) throws AuthorizationFailedException, AddressNotFoundException{
+
+        String decode = authorization.split("Bearer ")[1];
+        CustomerEntity customerEntity = customerService.getCustomer(decode);
+
+        AddressEntity addressEntity = addressService.getAddressByUUID(address_id, customerEntity);
+        AddressEntity deleteAddress = addressService.deleteAddress(addressEntity);
+
+        DeleteAddressResponse deleteAddressResponse = new DeleteAddressResponse().id(UUID.fromString(deleteAddress.getUuid())).status("ADDRESS DELETED SUCCESSFULLY") ;
+        return new ResponseEntity<DeleteAddressResponse>(deleteAddressResponse, HttpStatus.OK);
     }
 
 }
