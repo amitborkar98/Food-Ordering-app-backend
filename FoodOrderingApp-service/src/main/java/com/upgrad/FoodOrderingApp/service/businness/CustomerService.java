@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
+import static java.util.Base64.getEncoder;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -90,7 +90,11 @@ public class CustomerService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerAuthEntity authenticate(String contact_number, String password) throws AuthenticationFailedException {
 
-        if (password == null || contact_number == null) {
+        if(password == null || contact_number == null){
+            throw new AuthenticationFailedException("ATH-003", "Incorrect format of decoded customer name and password");
+        }
+
+        if (password.equals("Invalid") ) {
             throw new AuthenticationFailedException("ATH-003", "Incorrect format of decoded customer name and password");
         }
 

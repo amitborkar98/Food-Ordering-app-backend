@@ -54,20 +54,29 @@ public class CustomerController {
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
 
-        CustomerAuthEntity customerAuthEntity = customerService.authenticate(decodedArray[0], decodedArray[1]);
-        CustomerEntity customerEntity = customerAuthEntity.getCustomer();
+        if(decodedArray.length == 0){
+            String [] s =new String[2];
+            s[0] = "Invalid";
+            s[1] = "Invalid";
+            customerService.authenticate(s[0],s[1]);
+        }
+        else {
+            CustomerAuthEntity customerAuthEntity = customerService.authenticate(decodedArray[0], decodedArray[1]);
+            CustomerEntity customerEntity = customerAuthEntity.getCustomer();
 
-        LoginResponse loginResponse = new LoginResponse().id(customerEntity.getUuid()).message("LOGGED IN SUCCESSFULLY").firstName(customerEntity.getFirstname()).lastName(customerEntity.getLastame()).emailAddress(customerEntity.getEmail()).contactNumber(customerEntity.getContact_number());
+            LoginResponse loginResponse = new LoginResponse().id(customerEntity.getUuid()).message("LOGGED IN SUCCESSFULLY").firstName(customerEntity.getFirstname()).lastName(customerEntity.getLastame()).emailAddress(customerEntity.getEmail()).contactNumber(customerEntity.getContact_number());
 
-        List<String> header = new ArrayList<>();
-        header.add("access-token");
+            List<String> header = new ArrayList<>();
+            header.add("access-token");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("access-token", customerAuthEntity.getAccess_token());
-        headers.setAccessControlExposeHeaders(header);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("access-token", customerAuthEntity.getAccess_token());
+            headers.setAccessControlExposeHeaders(header);
 
-        return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
-     }
+            return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
+        }
+        return null;
+    }
 
 
      @RequestMapping(method = RequestMethod.POST, path = "/customer/logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -96,6 +105,7 @@ public class CustomerController {
          return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse, HttpStatus.OK);
      }
 
+
     @RequestMapping(method = RequestMethod.PUT, path = "/customer/password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
      public ResponseEntity<UpdatePasswordResponse> updatePassword(@RequestHeader("authorization") final String authorization,
                                                                   final UpdatePasswordRequest updatePasswordRequest) throws UpdateCustomerException, AuthorizationFailedException{
@@ -108,4 +118,6 @@ public class CustomerController {
         return new ResponseEntity<UpdatePasswordResponse>(updatePasswordResponse, HttpStatus.OK);
      }
 }
+
+
 
