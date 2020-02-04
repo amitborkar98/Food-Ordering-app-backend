@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "customer")
+@Table(name = "category")
 public class CategoryEntity implements Serializable {
 
         @Id

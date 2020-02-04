@@ -5,9 +5,13 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "restaurant")
+@NamedQueries({
+        @NamedQuery(name = "getRestaurantId", query = "select ut from RestaurantEntity ut where ut.uuid =:uuid")
+})
 public class RestaurantEntity {
 
     @Id
@@ -28,18 +32,37 @@ public class RestaurantEntity {
     private String photo_url;
 
     @Column(name = "customer_rating")
-    private Number customer_rating;
+    private float customer_rating;
 
     @Column(name = "average_price_for_two")
     private Integer average_price_for_two;
 
-    @Column(name = "number_of_customer_rated")
-    private Integer number_of_customer_rated;
+    @Column(name = "number_of_customers_rated")
+    private Integer number_of_customers_rated;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    AddressEntity addressEntity;
+    private AddressEntity addressEntity;
+
+    @OneToMany(mappedBy = "categoryEntity" ,fetch = FetchType.LAZY)
+    List<RestaurantCategoryEntity> categories;
+
+    public List<RestaurantCategoryEntity> getCategories(){
+        return categories;
+    }
+
+    public void setCategories(List<RestaurantCategoryEntity> categories){
+        this.categories = categories;
+    }
+
+
+    public AddressEntity getAddress(){
+        return addressEntity;
+    }
+    public void setAddress(AddressEntity addressEntity){
+        this.addressEntity=addressEntity;
+    }
 
     public Integer getId() {
         return id;
@@ -77,7 +100,7 @@ public class RestaurantEntity {
         return customer_rating;
     }
 
-    public void setCustomer_rating(Number customer_rating) {
+    public void setCustomer_rating(float customer_rating) {
         this.customer_rating = customer_rating;
     }
 
@@ -90,10 +113,10 @@ public class RestaurantEntity {
     }
 
     public Integer getNumber_of_customer_rated() {
-        return number_of_customer_rated;
+        return number_of_customers_rated;
     }
 
     public void setNumber_of_customer_rated(Integer number_of_customer_rated) {
-        this.number_of_customer_rated = number_of_customer_rated;
+        this.number_of_customers_rated = number_of_customer_rated;
     }
 }

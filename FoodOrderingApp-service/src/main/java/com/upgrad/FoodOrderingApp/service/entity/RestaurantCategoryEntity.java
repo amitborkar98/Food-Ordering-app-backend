@@ -25,7 +25,23 @@ public class RestaurantCategoryEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    CategoryEntity categoryEntity;
+    private CategoryEntity categoryEntity;
+
+    public RestaurantEntity getRestaurantEntity(){
+        return restaurantEntity;
+    }
+
+    public void setRestaurantEntity(RestaurantEntity restaurantEntity){
+        this.restaurantEntity = restaurantEntity;
+    }
+
+    public CategoryEntity getCategories(){
+        return categoryEntity;
+    }
+
+    public void setCategoryEntity(CategoryEntity categoryEntity){
+        this.categoryEntity = categoryEntity;
+    }
 
     public Integer getId() {
         return id;
