@@ -33,6 +33,13 @@ public class CategoryEntity implements Serializable {
         @OneToMany(mappedBy = "categoryEntity", fetch = FetchType.EAGER)
         List<RestaurantCategoryEntity> categoryRestaurants;
 
+        @Transient
+        List<ItemEntity> items = new ArrayList<>();
+
+        public void setItems(List<ItemEntity> items){
+            this.items = items;
+        }
+
     public  List<RestaurantCategoryEntity> getCategoryRestaurants() { return  categoryRestaurants ;}
 
     public void setCategoryRestaurants(List<RestaurantCategoryEntity> categoryRestaurants){
