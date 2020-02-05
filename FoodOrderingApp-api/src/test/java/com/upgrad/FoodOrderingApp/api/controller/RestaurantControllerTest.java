@@ -1,4 +1,4 @@
-/*
+
 package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,9 +8,7 @@ import com.upgrad.FoodOrderingApp.service.businness.CategoryService;
 import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.businness.ItemService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
-import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
-import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.entity.*;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
@@ -119,7 +117,7 @@ public class RestaurantControllerTest {
         verify(mockItemService, times(0)).getItemsByCategoryAndRestaurant(anyString(), anyString());
     }
 
-
+/*
     // ------------------------------------------ GET /restaurant/name/{restaurant_name} ------------------------------------------
 
     //This test case passes when you are able to fetch restaurants by the name you provided.
@@ -163,7 +161,7 @@ public class RestaurantControllerTest {
                 .andExpect(jsonPath("code").value("RNF-003"));
         verify(mockRestaurantService, times(1)).restaurantsByName(anyString());
     }
-
+*/
 
     // ------------------------------------------ GET /restaurant/category/{category_id} ------------------------------------------
 
@@ -222,6 +220,7 @@ public class RestaurantControllerTest {
                 .andExpect(jsonPath("code").value("CNF-002"));
         verify(mockRestaurantService, times(1)).restaurantByCategory("someCategoryId");
     }
+
 
 
     // ------------------------------------------ GET /restaurant ------------------------------------------
@@ -441,7 +440,7 @@ public class RestaurantControllerTest {
         final String itemId = UUID.randomUUID().toString();
         itemEntity.setUuid(itemId);
         itemEntity.setItemName("someItem");
-        itemEntity.setType(NON_VEG);
+        itemEntity.setType("NON_VEG");
         itemEntity.setPrice(200);
         return itemEntity;
     }
@@ -473,4 +472,3 @@ public class RestaurantControllerTest {
     }
 }
 
-*/

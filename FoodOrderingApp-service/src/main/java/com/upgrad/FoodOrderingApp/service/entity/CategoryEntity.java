@@ -27,9 +27,17 @@ public class CategoryEntity implements Serializable {
         @Size(max = 255)
         private String category_name;
 
-        @OneToMany(mappedBy = "categoryEntity",fetch = FetchType.EAGER)
+        @OneToMany(mappedBy = "categoryEntity",fetch = FetchType.LAZY)
         List<CategoryItemEntity> categoryItems;
 
+        @OneToMany(mappedBy = "categoryEntity", fetch = FetchType.EAGER)
+        List<RestaurantCategoryEntity> categoryRestaurants;
+
+    public  List<RestaurantCategoryEntity> getCategoryRestaurants() { return  categoryRestaurants ;}
+
+    public void setCategoryRestaurants(List<RestaurantCategoryEntity> categoryRestaurants){
+        this.categoryRestaurants = categoryRestaurants;
+    }
 
     public List<CategoryItemEntity> getCategoryItems(){
         return categoryItems;
@@ -59,7 +67,7 @@ public class CategoryEntity implements Serializable {
         return category_name;
     }
 
-    public void setCategory_name(String category_name) {
+    public void setCategoryName(String category_name) {
         this.category_name = category_name;
     }
 

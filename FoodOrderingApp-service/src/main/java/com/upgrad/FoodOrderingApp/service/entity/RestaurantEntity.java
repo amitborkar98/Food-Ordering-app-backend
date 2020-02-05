@@ -96,7 +96,7 @@ public class RestaurantEntity implements Serializable {
         return restaurant_name;
     }
 
-    public void setRestaurant_name(String restaurant_name) {
+    public void setRestaurantName(String restaurant_name) {
         this.restaurant_name = restaurant_name;
     }
 
@@ -104,7 +104,7 @@ public class RestaurantEntity implements Serializable {
         return photo_url;
     }
 
-    public void setPhoto_url(String photo_url) {
+    public void setPhotoUrl(String photo_url) {
         this.photo_url = photo_url;
     }
 
@@ -112,7 +112,7 @@ public class RestaurantEntity implements Serializable {
         return customer_rating;
     }
 
-    public void setCustomer_rating(double customer_rating) {
+    public void setCustomerRating(double customer_rating) {
         this.customer_rating = customer_rating;
     }
 
@@ -120,7 +120,7 @@ public class RestaurantEntity implements Serializable {
         return average_price_for_two;
     }
 
-    public void setAverage_price_for_two(Integer average_price_for_two) {
+    public void setAvgPrice(Integer average_price_for_two) {
         this.average_price_for_two = average_price_for_two;
     }
 
@@ -128,7 +128,7 @@ public class RestaurantEntity implements Serializable {
         return number_of_customers_rated;
     }
 
-    public void setNumber_of_customer_rated(Integer number_of_customer_rated) {
+    public void setNumberCustomersRated(Integer number_of_customer_rated) {
         this.number_of_customers_rated = number_of_customer_rated;
     }
 }

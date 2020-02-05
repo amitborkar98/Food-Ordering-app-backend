@@ -55,14 +55,6 @@ public class ItemService {
              }
          }
         }
-        List<ItemEntity> newRestaurantCategoryItems = new ArrayList<>();
-        for(ItemEntity i : restaurantCategoryItems ){
-            for(ItemEntity s : items){
-                if(s.getUuid() == i.getUuid()){
-                   newRestaurantCategoryItems.add(s);
-                }
-            }
-        }
-        return newRestaurantCategoryItems;
+        return restaurantCategoryItems;
     }
 }

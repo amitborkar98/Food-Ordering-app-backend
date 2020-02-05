@@ -53,7 +53,7 @@ public class ItemEntity implements Serializable {
         return item_name;
     }
 
-    public void setItem_name(String item_name) {
+    public void setItemName(String item_name) {
         this.item_name = item_name;
     }
 
