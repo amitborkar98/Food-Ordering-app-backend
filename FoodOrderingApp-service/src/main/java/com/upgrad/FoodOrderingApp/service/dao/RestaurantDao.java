@@ -34,4 +34,7 @@ public class RestaurantDao {
         return query.getResultList();
     }
 
+    public RestaurantEntity updateRestaurantRatings(RestaurantEntity restaurantEntity ){
+        return entityManager.merge(restaurantEntity);
+    }
 }

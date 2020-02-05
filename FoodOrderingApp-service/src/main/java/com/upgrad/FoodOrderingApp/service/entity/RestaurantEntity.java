@@ -33,7 +33,7 @@ public class RestaurantEntity implements Serializable {
     private String photo_url;
 
     @Column(name = "customer_rating")
-    private float customer_rating;
+    private double customer_rating;
 
     @Column(name = "average_price_for_two")
     private Integer average_price_for_two;
@@ -108,11 +108,11 @@ public class RestaurantEntity implements Serializable {
         this.photo_url = photo_url;
     }
 
-    public Number getCustomer_rating() {
+    public Double getCustomer_rating() {
         return customer_rating;
     }
 
-    public void setCustomer_rating(float customer_rating) {
+    public void setCustomer_rating(double customer_rating) {
         this.customer_rating = customer_rating;
     }
 
