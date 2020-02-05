@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "restaurant")
 @NamedQueries({
-        @NamedQuery(name = "getRestaurantId", query = "select ut from RestaurantEntity ut where ut.uuid =:uuid")
+        @NamedQuery(name = "getRestaurantId", query = "select ut from RestaurantEntity ut where ut.uuid =:uuid"),
 })
 public class RestaurantEntity implements Serializable {
 

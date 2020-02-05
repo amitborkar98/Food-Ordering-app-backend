@@ -117,7 +117,7 @@ public class RestaurantControllerTest {
         verify(mockItemService, times(0)).getItemsByCategoryAndRestaurant(anyString(), anyString());
     }
 
-/*
+
     // ------------------------------------------ GET /restaurant/name/{restaurant_name} ------------------------------------------
 
     //This test case passes when you are able to fetch restaurants by the name you provided.
@@ -161,7 +161,7 @@ public class RestaurantControllerTest {
                 .andExpect(jsonPath("code").value("RNF-003"));
         verify(mockRestaurantService, times(1)).restaurantsByName(anyString());
     }
-*/
+
 
     // ------------------------------------------ GET /restaurant/category/{category_id} ------------------------------------------
 

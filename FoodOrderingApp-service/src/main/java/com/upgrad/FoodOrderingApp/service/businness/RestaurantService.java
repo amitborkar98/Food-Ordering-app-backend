@@ -94,6 +94,17 @@ public class RestaurantService {
         }
         return newRestaurantEntities;
     }
+
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<RestaurantEntity> restaurantsByName(String restaurant_name) throws RestaurantNotFoundException {
+
+        if(restaurant_name == null){
+            throw new RestaurantNotFoundException("RNF-003", "Restaurant name field should not be empty");
+        }
+        List<RestaurantEntity> restaurantEntities = restaurantDao.getRestaurantByName(restaurant_name);
+        return restaurantEntities;
+    }
 }
 
 
