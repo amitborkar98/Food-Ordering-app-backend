@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -12,7 +13,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "getRestaurantId", query = "select ut from RestaurantEntity ut where ut.uuid =:uuid")
 })
-public class RestaurantEntity {
+public class RestaurantEntity implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -45,7 +46,18 @@ public class RestaurantEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private AddressEntity addressEntity;
 
-    @OneToMany(mappedBy = "categoryEntity" ,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "restaurantEntity" ,fetch = FetchType.LAZY)
+    List<RestaurantItemEntity> restaurantItemEntities;
+
+    public List<RestaurantItemEntity> getRestaurantItems(){
+        return restaurantItemEntities;
+    }
+
+    public void setRestaurantItemEntities(List<RestaurantItemEntity> restaurantItemEntities){
+        this.restaurantItemEntities = restaurantItemEntities;
+    }
+
+   /* @OneToMany(mappedBy = "categoryEntity" ,fetch = FetchType.LAZY)
     List<RestaurantCategoryEntity> categories;
 
     public List<RestaurantCategoryEntity> getCategories(){
@@ -55,7 +67,7 @@ public class RestaurantEntity {
     public void setCategories(List<RestaurantCategoryEntity> categories){
         this.categories = categories;
     }
-
+    */
 
     public AddressEntity getAddress(){
         return addressEntity;

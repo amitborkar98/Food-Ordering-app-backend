@@ -5,12 +5,13 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "restaurant_category")
-public class RestaurantCategoryEntity {
+public class RestaurantCategoryEntity implements Serializable {
 
     @Id
     @Column(name = "id")

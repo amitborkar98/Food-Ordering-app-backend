@@ -30,6 +30,9 @@ public class ItemEntity implements Serializable {
     @Size(max = 10)
     private String type;
 
+    @OneToMany(mappedBy = "itemEntity", fetch = FetchType.EAGER)
+    List<CategoryItemEntity> categoryItemEntities = new ArrayList<>();
+
     public Integer getId() {
         return id;
     }

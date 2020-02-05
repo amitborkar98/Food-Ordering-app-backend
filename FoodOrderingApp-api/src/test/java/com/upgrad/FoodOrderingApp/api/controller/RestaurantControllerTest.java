@@ -1,5 +1,4 @@
-
-
+/*
 package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +9,7 @@ import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.businness.ItemService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Collections;
 import java.util.UUID;
 import static org.junit.Assert.assertEquals;
-//import static com.upgrad.FoodOrderingApp.service.common.ItemType.NON_VEG;
+import static com.upgrad.FoodOrderingApp.service.common.ItemType.NON_VEG;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -58,7 +58,6 @@ public class RestaurantControllerTest {
     @MockBean
     private CustomerService mockCustomerService;
 
-    /*
 
     // ------------------------------------------ GET /restaurant/{restaurant_id} ------------------------------------------
 
@@ -119,6 +118,7 @@ public class RestaurantControllerTest {
         verify(mockCategoryService, times(0)).getCategoriesByRestaurant(anyString());
         verify(mockItemService, times(0)).getItemsByCategoryAndRestaurant(anyString(), anyString());
     }
+
 
     // ------------------------------------------ GET /restaurant/name/{restaurant_name} ------------------------------------------
 
@@ -222,18 +222,18 @@ public class RestaurantControllerTest {
                 .andExpect(jsonPath("code").value("CNF-002"));
         verify(mockRestaurantService, times(1)).restaurantByCategory("someCategoryId");
     }
-*/
+
 
     // ------------------------------------------ GET /restaurant ------------------------------------------
 
     //This test case passes when you able to fetch the list of all restaurants.
     @Test
     public void shouldGetAllRestaurantDetails() throws Exception {
-        final RestaurantEntity restaurantEntity = new RestaurantEntity();
+        final RestaurantEntity restaurantEntity = getRestaurantEntity();
         when(mockRestaurantService.restaurantsByRating())
                 .thenReturn(Collections.singletonList(restaurantEntity));
 
-        final CategoryEntity categoryEntity = new CategoryEntity();
+        final CategoryEntity categoryEntity = getCategoryEntity();
         when(mockCategoryService.getCategoriesByRestaurant(restaurantEntity.getUuid()))
                 .thenReturn(Collections.singletonList(categoryEntity));
 
@@ -253,8 +253,8 @@ public class RestaurantControllerTest {
         verify(mockRestaurantService, times(1)).restaurantsByRating();
         verify(mockCategoryService, times(1)).getCategoriesByRestaurant(restaurantEntity.getUuid());
     }
-        }
-/*
+
+
     // ------------------------------------------ PUT /restaurant/{restaurant_id} ------------------------------------------
 
     //This test case passes when you are able to update restaurant rating successfully.

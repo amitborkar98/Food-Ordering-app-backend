@@ -25,6 +25,22 @@ public class CategoryItemEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     CategoryEntity categoryEntity;
 
+    public ItemEntity getItemEntity(){
+        return itemEntity;
+    }
+
+    public void setItemEntity(){
+        this.itemEntity = itemEntity;
+    }
+
+    public CategoryEntity getCategoryEntity(){
+        return categoryEntity;
+    }
+
+    public void setCategoryEntity(){
+        this.categoryEntity = categoryEntity;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -1,9 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
-import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CustomerAddressEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategoryEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.entity.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

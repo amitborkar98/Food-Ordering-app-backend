@@ -9,6 +9,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "category")
+@NamedQueries({
+        @NamedQuery(name = "getCategoryId", query = "select ut from CategoryEntity ut where ut.uuid =:uuid")
+})
 public class CategoryEntity implements Serializable {
 
         @Id
@@ -23,6 +26,18 @@ public class CategoryEntity implements Serializable {
         @Column(name = "category_name")
         @Size(max = 255)
         private String category_name;
+
+        @OneToMany(mappedBy = "categoryEntity",fetch = FetchType.EAGER)
+        List<CategoryItemEntity> categoryItems;
+
+
+    public List<CategoryItemEntity> getCategoryItems(){
+        return categoryItems;
+    }
+
+    public void setCategoryItems(List<CategoryItemEntity> categoryItems){
+        this.categoryItems = categoryItems;
+    }
 
     public Integer getId() {
         return id;
