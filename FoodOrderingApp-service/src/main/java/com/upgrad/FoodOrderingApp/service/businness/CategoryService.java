@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
+import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategoryEntity;
@@ -19,6 +20,9 @@ public class CategoryService {
     @Autowired
     RestaurantDao restaurantDao;
 
+    @Autowired
+    CategoryDao categoryDao;
+
     @Transactional(propagation = Propagation.REQUIRED)
     public List<CategoryEntity> getCategoriesByRestaurant(String uuid){
 
@@ -31,5 +35,11 @@ public class CategoryService {
             }
         }
         return categories;
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<CategoryEntity> getAllCategoriesOrderedByName(){
+        return categoryDao.getAllCategories();
     }
 }
