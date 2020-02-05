@@ -41,7 +41,7 @@ public class PaymentEntity implements Serializable {
         return payment_name;
     }
 
-    public void setPayment_name(String payment_name) {
+    public void setPaymentName(String payment_name) {
         this.payment_name = payment_name;
     }
 }
