@@ -46,7 +46,4 @@ public class RestaurantDao {
         return query.getResultList();
     }
 
-    public void j(final String restaurant_name){
-
-    }
 }
