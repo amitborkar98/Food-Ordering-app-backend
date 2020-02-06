@@ -6,7 +6,8 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "coupon")
 @NamedQueries({
-        @NamedQuery(name = "getCouponByName", query = "select ut from CouponEntity ut where ut.coupon_name =:coupon_name")
+        @NamedQuery(name = "getCouponByName", query = "select ut from CouponEntity ut where ut.coupon_name =:coupon_name"),
+        @NamedQuery(name = "getCouponById", query = "select ut from CouponEntity ut where ut.uuid =:uuid")
 })
 public class CouponEntity {
 
@@ -25,6 +26,16 @@ public class CouponEntity {
 
     @Column(name = "percent")
     private Integer percent;
+
+    public CouponEntity(){
+
+    }
+
+    public CouponEntity(String uuid, String coupon_name, Integer percent){
+        this.uuid = uuid;
+        this.coupon_name = coupon_name;
+        this.percent = percent;
+    }
 
     public Integer getId() {
         return id;

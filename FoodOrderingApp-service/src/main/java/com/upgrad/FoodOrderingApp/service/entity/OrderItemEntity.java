@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "oder_item")
+@Table(name = "order_item")
 public class OrderItemEntity implements Serializable {
 
     @Id
@@ -30,6 +30,22 @@ public class OrderItemEntity implements Serializable {
 
     @Column(name = "price")
     private Integer price;
+
+    public ItemEntity getItemEntity(){
+        return itemEntity;
+    }
+
+    public void setItemEntity(ItemEntity itemEntity){
+        this.itemEntity = itemEntity;
+    }
+
+    public OrdersEntity getOrdersEntity(){
+        return ordersEntity;
+    }
+
+    public void setOrdersEntity(OrdersEntity ordersEntity){
+        this.ordersEntity = ordersEntity;
+    }
 
     public Integer getId() {
         return id;

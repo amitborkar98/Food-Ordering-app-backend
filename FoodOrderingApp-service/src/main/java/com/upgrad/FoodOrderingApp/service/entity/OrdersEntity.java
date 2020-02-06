@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "orders")
@@ -23,7 +24,7 @@ public class OrdersEntity implements Serializable {
     private  String uuid;
 
     @Column(name = "bill")
-    private Number bill;
+    private double bill;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -31,10 +32,10 @@ public class OrdersEntity implements Serializable {
     CouponEntity couponEntity;
 
     @Column(name = "discount")
-    private Number discount;
+    private double discount;
 
     @Column(name = "date")
-    private ZonedDateTime date;
+    private Date date;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -56,6 +57,21 @@ public class OrdersEntity implements Serializable {
     @JoinColumn(name = "payment_id")
     PaymentEntity paymentEntity;
 
+    public OrdersEntity(String uuid, double bill, CouponEntity couponEntity, double discount, Date date, PaymentEntity paymentEntity,
+                        CustomerEntity customerEntity, AddressEntity addressEntity, RestaurantEntity restaurantEntity){
+        this.uuid = uuid;
+        this.bill = bill;
+        this.couponEntity = couponEntity;
+        this.discount = discount;
+        this.date = date;
+        this.paymentEntity = paymentEntity;
+        this.customerEntity = customerEntity;
+        this.addressEntity = addressEntity;
+        this.restaurantEntity = restaurantEntity;
+    }
+
+    public OrdersEntity(){ }
+
     public Integer getId() {
         return id;
     }
@@ -76,7 +92,7 @@ public class OrdersEntity implements Serializable {
         return bill;
     }
 
-    public void setBill(Number bill) {
+    public void setBill(double bill) {
         this.bill = bill;
     }
 
@@ -84,15 +100,15 @@ public class OrdersEntity implements Serializable {
         return discount;
     }
 
-    public void setDiscount(Number discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 
-    public ZonedDateTime getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(ZonedDateTime date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

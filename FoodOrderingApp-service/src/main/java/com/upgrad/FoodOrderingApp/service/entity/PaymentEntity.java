@@ -6,6 +6,9 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "payment")
+@NamedQueries({
+        @NamedQuery(name = "getPaymentById", query = "select ut from PaymentEntity ut where ut.uuid =:uuid")
+})
 public class PaymentEntity implements Serializable {
 
     @Id
@@ -20,6 +23,13 @@ public class PaymentEntity implements Serializable {
     @Column(name = "payment_name")
     @Size(max = 255)
     private String payment_name;
+
+    public PaymentEntity(){}
+
+    public PaymentEntity(String uuid, String payment_name){
+        this.uuid = uuid;
+        this.payment_name = payment_name;
+    }
 
     public Integer getId() {
         return id;
