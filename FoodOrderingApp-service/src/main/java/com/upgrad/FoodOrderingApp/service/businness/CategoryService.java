@@ -2,9 +2,7 @@ package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
-import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategoryEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.entity.*;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +50,13 @@ public class CategoryService {
         if(categoryEntity == null){
             throw new CategoryNotFoundException("CNF-002", "No category by this id");
         }
+
+        List<CategoryItemEntity> categoryItemEntities = categoryEntity.getCategoryItems();
+        List<ItemEntity> items = new ArrayList<>();
+        for (CategoryItemEntity s : categoryItemEntities){
+            items.add(s.getItemEntity());
+        }
+        categoryEntity.setItems(items);
         return categoryEntity;
     }
 }

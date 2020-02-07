@@ -40,6 +40,10 @@ public class CategoryEntity implements Serializable {
             this.items = items;
         }
 
+        public List<ItemEntity> getItems(){
+            return items;
+        }
+
     public  List<RestaurantCategoryEntity> getCategoryRestaurants() { return  categoryRestaurants ;}
 
     public void setCategoryRestaurants(List<RestaurantCategoryEntity> categoryRestaurants){

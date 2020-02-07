@@ -49,11 +49,7 @@ public class CategoryController {
     public ResponseEntity<CategoryDetailsResponse> getCategoryById(@PathVariable("category_id") String category_id) throws CategoryNotFoundException {
 
         CategoryEntity categoryEntity = categoryService.getCategoryById(category_id);
-        List<CategoryItemEntity> categoryItems = categoryEntity.getCategoryItems();
-        List<ItemEntity> items = new ArrayList<>();
-        for (CategoryItemEntity s : categoryItems){
-            items.add(s.getItemEntity());
-        }
+        List<ItemEntity> items = categoryEntity.getItems();
         List<ItemList> itemLists = new ArrayList<>();
         for(ItemEntity i : items){
             if(i.getType().equals("0")){
