@@ -3,14 +3,16 @@ package com.upgrad.FoodOrderingApp.service.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @Table(name = "customer")
 @NamedQueries({
         @NamedQuery(name = "customerByContact", query = "select u from CustomerEntity u where u.contact_number = :contact_number"),
+        @NamedQuery(name = "customerById", query = "select u from CustomerEntity u where u.uuid = :uuid"),
 })
-
 public class CustomerEntity implements Serializable {
 
     @Id
@@ -45,6 +47,13 @@ public class CustomerEntity implements Serializable {
     @Column(name = "salt")
     @Size(max = 255)
     private  String salt;
+
+    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.EAGER)
+    List<OrdersEntity> customerOrders = new ArrayList<>();
+
+    public List<OrdersEntity> getCustomerOrders() {
+        return  customerOrders;
+    }
 
     public Integer getId() {
         return id;

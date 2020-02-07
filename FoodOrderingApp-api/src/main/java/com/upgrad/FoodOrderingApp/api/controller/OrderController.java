@@ -81,7 +81,6 @@ public class OrderController {
             orderItemEntity.setItemEntity(itemEntity);
             orderItemEntity.setOrdersEntity(ordersEntity);
             orderItems.add(orderItemEntity);
-           // orderService.saveOrderItem(orderItemEntity);
         }
         OrdersEntity savedOrder = orderService.saveOrder(ordersEntity);
         for(OrderItemEntity i : orderItems){
@@ -89,5 +88,25 @@ public class OrderController {
         }
         SaveOrderResponse saveOrderResponse = new SaveOrderResponse().id(savedOrder.getUuid()).status("ORDER SUCCESSFULLY PLACED");
         return new ResponseEntity<>(saveOrderResponse, HttpStatus.CREATED);
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, path = "/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<OrderList> getAllOrders(@RequestHeader("authorization") String authorization) throws AuthorizationFailedException{
+
+        String decode = authorization.split("Bearer ")[1];
+        CustomerEntity customerEntity = customerService.getCustomer(decode);
+
+        List<OrdersEntity> ordersEntities = orderService.getOrdersByCustomers(customerEntity.getUuid());
+        for(OrdersEntity i : ordersEntities){
+            List<OrderItemEntity> orderItems = i.getOrderItems();
+            List<ItemEntity> items = new ArrayList<>();
+            for(OrderItemEntity s : orderItems){
+                items.add(s.getItemEntity());
+            }
+        }
+
+        OrderList orderList = new OrderList();
+        return new ResponseEntity<OrderList>(orderList, HttpStatus.OK);
     }
 }

@@ -390,7 +390,7 @@ public class CustomerControllerTest {
         mockMvc
                 .perform(put("/customer/password")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                        .header("authorization", "auth")
+                        .header("authorization", "Bearer auth")
                         .content("{\"old_password\":\"\", \"new_password\":\"newPwd\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("code").value("UCR-003"));

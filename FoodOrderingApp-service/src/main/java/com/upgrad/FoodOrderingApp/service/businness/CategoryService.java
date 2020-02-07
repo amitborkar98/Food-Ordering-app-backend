@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
@@ -26,7 +27,6 @@ public class CategoryService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<CategoryEntity> getCategoriesByRestaurant(String uuid){
-
         RestaurantEntity restaurantEntity = restaurantDao.getRestaurantById(uuid);
         List<RestaurantCategoryEntity> restaurantCategoryEntities = restaurantDao.getAllCAtegories();
         List<CategoryEntity> categories = new ArrayList<>();

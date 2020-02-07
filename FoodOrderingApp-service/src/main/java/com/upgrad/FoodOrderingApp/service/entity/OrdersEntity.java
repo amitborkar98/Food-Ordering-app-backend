@@ -8,7 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -57,6 +59,13 @@ public class OrdersEntity implements Serializable {
     @JoinColumn(name = "payment_id")
     PaymentEntity paymentEntity;
 
+    @OneToMany(mappedBy = "ordersEntity",fetch = FetchType.EAGER)
+    List<OrderItemEntity> orderItems = new ArrayList<>();
+
+    public List<OrderItemEntity> getOrderItems(){
+        return orderItems;
+    }
+
     public OrdersEntity(String uuid, double bill, CouponEntity couponEntity, double discount, Date date, PaymentEntity paymentEntity,
                         CustomerEntity customerEntity, AddressEntity addressEntity, RestaurantEntity restaurantEntity){
         this.uuid = uuid;
@@ -68,6 +77,26 @@ public class OrdersEntity implements Serializable {
         this.customerEntity = customerEntity;
         this.addressEntity = addressEntity;
         this.restaurantEntity = restaurantEntity;
+    }
+
+    public CouponEntity getCoupon(){
+        return couponEntity;
+    }
+
+    public CustomerEntity getCustomer(){
+        return customerEntity;
+    }
+
+    public RestaurantEntity getRestaurant(){
+        return restaurantEntity;
+    }
+
+    public PaymentEntity getPayment(){
+        return paymentEntity;
+    }
+
+    public AddressEntity getAddress(){
+        return addressEntity;
     }
 
     public OrdersEntity(){ }

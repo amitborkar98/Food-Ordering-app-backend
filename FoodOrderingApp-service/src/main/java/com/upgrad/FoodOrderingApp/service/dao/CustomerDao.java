@@ -31,6 +31,14 @@ public class CustomerDao {
         }
     }
 
+    public CustomerEntity getCustomerById(final String uuid){
+        try {
+            return entityManager.createNamedQuery("customerById", CustomerEntity.class).setParameter("uuid", uuid).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
     public CustomerAuthEntity createToken(final CustomerAuthEntity customerAuthEntity) {
         entityManager.persist(customerAuthEntity);
         return customerAuthEntity;
