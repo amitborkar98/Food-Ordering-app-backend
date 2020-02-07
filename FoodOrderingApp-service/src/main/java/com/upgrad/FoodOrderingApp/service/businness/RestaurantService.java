@@ -31,10 +31,8 @@ public class RestaurantService {
         return restaurantDao.getRestaurants();
     }
 
-
     @Transactional(propagation = Propagation.REQUIRED)
     public RestaurantEntity restaurantByUUID(String uuid) throws RestaurantNotFoundException {
-
         if(uuid == null){
             throw new RestaurantNotFoundException("(RNF-002", "Restaurant id field should not be empty");
         }
@@ -45,10 +43,8 @@ public class RestaurantService {
         return restaurantEntity;
     }
 
-
     @Transactional(propagation = Propagation.REQUIRED)
     public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurantEntity, double ratings) throws InvalidRatingException {
-
         if(ratings < 1.0 || ratings > 5.0){
             throw new InvalidRatingException("IRE-001", "Restaurant should be in the range of 1 to 5");
         }
@@ -62,10 +58,8 @@ public class RestaurantService {
         }
     }
 
-
     @Transactional(propagation = Propagation.REQUIRED)
     public List<RestaurantEntity> restaurantByCategory(String category_id) throws CategoryNotFoundException {
-
         if(category_id == null){
             throw new CategoryNotFoundException("CNF-001", "Category id field should not be empty");
         }
@@ -94,15 +88,12 @@ public class RestaurantService {
         return newRestaurantEntities;
     }
 
-
     @Transactional(propagation = Propagation.REQUIRED)
     public List<RestaurantEntity> restaurantsByName(String restaurant_name) throws RestaurantNotFoundException {
-
         if(restaurant_name == null){
             throw new RestaurantNotFoundException("RNF-003", "Restaurant name field should not be empty");
         }
-        List<RestaurantEntity> restaurantEntities = restaurantDao.getRestaurantByName(restaurant_name);
-        return restaurantEntities;
+        return restaurantDao.getRestaurantByName(restaurant_name);
     }
 }
 

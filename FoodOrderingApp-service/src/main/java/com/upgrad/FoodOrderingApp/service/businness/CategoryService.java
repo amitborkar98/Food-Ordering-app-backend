@@ -28,7 +28,7 @@ public class CategoryService {
     @Transactional(propagation = Propagation.REQUIRED)
     public List<CategoryEntity> getCategoriesByRestaurant(String uuid){
         RestaurantEntity restaurantEntity = restaurantDao.getRestaurantById(uuid);
-        List<RestaurantCategoryEntity> restaurantCategoryEntities = restaurantDao.getAllCAtegories();
+        List<RestaurantCategoryEntity> restaurantCategoryEntities = restaurantDao.getAllRestaurantCategories();
         List<CategoryEntity> categories = new ArrayList<>();
         for(RestaurantCategoryEntity s : restaurantCategoryEntities){
             if(s.getRestaurantEntity() == restaurantEntity){
@@ -38,12 +38,10 @@ public class CategoryService {
         return categories;
     }
 
-
     @Transactional(propagation = Propagation.REQUIRED)
     public List<CategoryEntity> getAllCategoriesOrderedByName(){
         return categoryDao.getAllCategories();
     }
-
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CategoryEntity getCategoryById(String category_id)throws CategoryNotFoundException {

@@ -31,7 +31,7 @@ public class RestaurantDao {
         }
     }
 
-    public List<RestaurantCategoryEntity> getAllCAtegories(){
+    public List<RestaurantCategoryEntity> getAllRestaurantCategories(){
         TypedQuery<RestaurantCategoryEntity> query =entityManager.createQuery("SELECT p from RestaurantCategoryEntity p", RestaurantCategoryEntity.class);
         return query.getResultList();
     }

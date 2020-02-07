@@ -46,7 +46,7 @@ public class CategoryControllerTest {
         final ItemEntity itemEntity = new ItemEntity();
         itemEntity.setItemName("myItem");
         itemEntity.setPrice(200);
-        itemEntity.setType("NON_VEG");
+        itemEntity.setType(NON_VEG.valueOf("NON_VEG").toString());
         final String itemId = UUID.randomUUID().toString();
         itemEntity.setUuid(itemId);
 

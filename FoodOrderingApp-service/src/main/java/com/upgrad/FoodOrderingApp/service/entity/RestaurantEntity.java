@@ -41,7 +41,7 @@ public class RestaurantEntity implements Serializable {
     @Column(name = "number_of_customers_rated")
     private Integer number_of_customers_rated;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private AddressEntity addressEntity;
