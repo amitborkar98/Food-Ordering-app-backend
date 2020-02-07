@@ -298,7 +298,7 @@ public class CustomerControllerTest {
         mockMvc
                 .perform(put("/customer")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                        .header("authorization", "auth")
+                        .header("authorization", "Bearer auth")
                         .content("{\"first_name\":\"\", \"last_name\":\"last\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("code").value("UCR-002"));

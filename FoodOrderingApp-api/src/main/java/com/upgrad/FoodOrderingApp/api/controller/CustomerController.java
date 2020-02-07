@@ -94,8 +94,11 @@ public class CustomerController {
      public ResponseEntity<UpdateCustomerResponse> updateCustomer(@RequestHeader("authorization") final String authorization,
                                                                   final UpdateCustomerRequest updateCustomerRequest) throws UpdateCustomerException, AuthorizationFailedException {
 
-         String decode = authorization.split("Bearer ")[1];
-
+        String decode = authorization.split("Bearer ")[1];
+        //not working in service class, hence instantiated here
+        if(updateCustomerRequest.getFirstName() == null){
+            throw new UpdateCustomerException("UCR-002", "First name field should not be empty");
+        }
          CustomerEntity customerEntity = customerService.getCustomer(decode);
          customerEntity.setFirstName(updateCustomerRequest.getFirstName());
          customerEntity.setLastName(updateCustomerRequest.getLastName());

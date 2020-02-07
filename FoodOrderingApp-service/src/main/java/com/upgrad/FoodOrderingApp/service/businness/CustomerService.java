@@ -27,7 +27,7 @@ public class CustomerService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity saveCustomer(CustomerEntity customerEntity)throws SignUpRestrictedException {
 
-        if (customerEntity.getFirstname() == null || customerEntity.getContact_number() == null || customerEntity.getEmail() == null || customerEntity.getPassword() == null || customerEntity.getSalt() == null) {
+        if (customerEntity.getFirstname() == null || customerEntity.getContact_number() == null || customerEntity.getEmail() == null || customerEntity.getPassword() == null) {
             throw new SignUpRestrictedException("SGR-005", "Except last name all fields should be filled");
         }
 
@@ -165,7 +165,7 @@ public class CustomerService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity updateCustomer(CustomerEntity customerEntity) throws UpdateCustomerException {
-
+        //not working here
         if(customerEntity.getFirstname() == null){
             throw new UpdateCustomerException("UCR-002", "First name field should not be empty");
         }

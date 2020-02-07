@@ -49,6 +49,13 @@ public class AddressEntity implements Serializable {
     @Column(name = "active")
     private Integer active;
 
+    @OneToMany(mappedBy = "addressEntity", fetch = FetchType.LAZY)
+    List<OrdersEntity> orders = new ArrayList<>();
+
+    public List<OrdersEntity> getOrders(){
+        return orders;
+    }
+
     public AddressEntity(){
 
     }
