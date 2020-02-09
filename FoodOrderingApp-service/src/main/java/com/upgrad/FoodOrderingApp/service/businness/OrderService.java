@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.sasl.SaslServer;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -58,6 +59,8 @@ public class OrderService {
     @Transactional(propagation = Propagation.REQUIRED)
     public List<OrdersEntity> getOrdersByCustomers(String customer_id){
         CustomerEntity customerEntity = customerDao.getCustomerById(customer_id);
-        return customerEntity.getCustomerOrders();
+        List<OrdersEntity> orders = customerEntity.getCustomerOrders();
+        Collections.reverse(orders);
+        return orders;
     }
 }
