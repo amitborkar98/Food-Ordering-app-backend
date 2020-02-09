@@ -5,7 +5,6 @@ import com.upgrad.FoodOrderingApp.service.dao.ItemDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.*;
 import com.upgrad.FoodOrderingApp.service.exception.ItemNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -64,18 +63,25 @@ public class ItemService {
         return restaurantCategoryItems;
     }
 
-
     @Transactional(propagation = Propagation.REQUIRED)
     public List<ItemEntity> getItemsByPopularity(RestaurantEntity restaurantEntity){
 
-        List<RestaurantItemEntity> restaurantItemEntities = restaurantEntity.getRestaurantItems();
+        List<OrdersEntity> orders = restaurantEntity.getOrders();
+
+        List<ItemEntity> items = new ArrayList<>();
+        for(OrdersEntity s : orders){
+            List<OrderItemEntity> orderItems = s.getOrderItems();
+            for(OrderItemEntity i : orderItems){
+                items.add(i.getItemEntity());
+            }
+        }
+        List<RestaurantItemEntity> restaurantItemEntities =  restaurantEntity.getRestaurantItems();
         List<ItemEntity> restaurantItems = new ArrayList<>();
         for(RestaurantItemEntity i : restaurantItemEntities){
             restaurantItems.add(i.getItemEntity());
         }
-        return null;
+        return items;
     }
-
 
     @Transactional(propagation = Propagation.REQUIRED)
     public ItemEntity getItemById(String item_id) throws ItemNotFoundException {

@@ -86,26 +86,20 @@ public class CustomerService {
         }
     }
 
-
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerAuthEntity authenticate(String contact_number, String password) throws AuthenticationFailedException {
-
         if(password == null || contact_number == null){
             throw new AuthenticationFailedException("ATH-003", "Incorrect format of decoded customer name and password");
         }
-
         if (password.equals("Invalid") ) {
             throw new AuthenticationFailedException("ATH-003", "Incorrect format of decoded customer name and password");
         }
-
         CustomerEntity customer = customerDao.getCustomerByContact(contact_number);
         if (customer == null) {
             throw new AuthenticationFailedException("ATH-001", "This contact number has not been registered!");
         }
-
         final String encryptedPassword = passwordCryptographyProvider.encrypt(password, customer.getSalt());
         if (encryptedPassword.equals(customer.getPassword())) {
-
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             CustomerAuthEntity customerAuthEntity = new CustomerAuthEntity();
             customerAuthEntity.setCustomer(customer);
@@ -115,14 +109,12 @@ public class CustomerService {
             customerAuthEntity.setUuid(UUID.randomUUID().toString());
             customerAuthEntity.setLogin_at(now);
             customerAuthEntity.setExpires_at(expiresAt);
-
             return customerDao.createToken(customerAuthEntity);
         }
         else {
             throw new AuthenticationFailedException("ATH-002", "Invalid Credentials");
         }
     }
-
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerAuthEntity logout(String authorization) throws AuthorizationFailedException {

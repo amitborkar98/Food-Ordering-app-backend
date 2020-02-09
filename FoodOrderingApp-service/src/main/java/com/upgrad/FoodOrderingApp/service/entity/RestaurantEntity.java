@@ -49,6 +49,13 @@ public class RestaurantEntity implements Serializable {
     @OneToMany(mappedBy = "restaurantEntity" ,fetch = FetchType.LAZY)
     List<RestaurantItemEntity> restaurantItemEntities;
 
+    @OneToMany(mappedBy = "restaurantEntity", fetch = FetchType.LAZY)
+    List<OrdersEntity> orders;
+
+    public List<OrdersEntity> getOrders(){
+        return orders;
+    }
+
     public List<RestaurantItemEntity> getRestaurantItems(){
         return restaurantItemEntities;
     }

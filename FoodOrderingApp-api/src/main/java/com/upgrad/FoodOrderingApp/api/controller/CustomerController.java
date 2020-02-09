@@ -53,7 +53,6 @@ public class CustomerController {
         byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
-
         if(decodedArray.length == 0){
             String [] s =new String[2];
             s[0] = "Invalid";
@@ -63,16 +62,12 @@ public class CustomerController {
         else {
             CustomerAuthEntity customerAuthEntity = customerService.authenticate(decodedArray[0], decodedArray[1]);
             CustomerEntity customerEntity = customerAuthEntity.getCustomer();
-
             LoginResponse loginResponse = new LoginResponse().id(customerEntity.getUuid()).message("LOGGED IN SUCCESSFULLY").firstName(customerEntity.getFirstname()).lastName(customerEntity.getLastame()).emailAddress(customerEntity.getEmail()).contactNumber(customerEntity.getContact_number());
-
             List<String> header = new ArrayList<>();
             header.add("access-token");
-
             HttpHeaders headers = new HttpHeaders();
             headers.add("access-token", customerAuthEntity.getAccess_token());
             headers.setAccessControlExposeHeaders(header);
-
             return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
         }
         return null;

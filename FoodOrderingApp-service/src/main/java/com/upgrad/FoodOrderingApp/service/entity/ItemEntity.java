@@ -36,6 +36,13 @@ public class ItemEntity implements Serializable {
     @OneToMany(mappedBy = "itemEntity", fetch = FetchType.EAGER)
     List<CategoryItemEntity> categoryItemEntities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "itemEntity", fetch = FetchType.LAZY)
+    List<OrderItemEntity> orderItems = new ArrayList<>();
+
+    public List<OrderItemEntity> getOrderItems(){
+        return orderItems;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +30,6 @@ public class ItemController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/item/restaurant/{restaurant_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ItemListResponse> getItems(@PathVariable("restaurant_id") String restaurant_id) throws RestaurantNotFoundException {
-
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurant_id);
         List<ItemEntity> itemEntities = itemService.getItemsByPopularity(restaurantEntity);
         List<ItemList> itemLists = new ArrayList<>();
@@ -39,19 +39,18 @@ public class ItemController {
                 ItemList itemList = new ItemList().id(UUID.fromString(i.getUuid())).itemName(i.getItem_name())
                         .price(i.getPrice()).itemType(typeEnum);
                 itemLists.add(itemList);
-                ItemListResponse itemListResponse = new ItemListResponse();
-                return new ResponseEntity<ItemListResponse>(itemListResponse, HttpStatus.OK);
             }
             else {
                 ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("NON_VEG");
                 ItemList itemList = new ItemList().id(UUID.fromString(i.getUuid())).itemName(i.getItem_name())
                         .price(i.getPrice()).itemType(typeEnum);
                 itemLists.add(itemList);
-                ItemListResponse itemListResponse = new ItemListResponse();
-                return new ResponseEntity<ItemListResponse>(itemListResponse, HttpStatus.OK);
             }
-
         }
-        return null;
+        ItemListResponse itemListResponse = new ItemListResponse();
+        for(ItemList i : itemLists){
+            itemListResponse.add(i);
+        }
+        return new ResponseEntity<ItemListResponse>(itemListResponse, HttpStatus.OK);
     }
 }

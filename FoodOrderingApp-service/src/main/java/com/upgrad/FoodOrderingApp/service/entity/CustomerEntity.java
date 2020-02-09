@@ -48,8 +48,12 @@ public class CustomerEntity implements Serializable {
     @Size(max = 255)
     private  String salt;
 
-    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.EAGER)
-    List<OrdersEntity> customerOrders = new ArrayList<>();
+    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)
+     private List<OrdersEntity> customerOrders;
+
+    public void setCustomerOrders(List<OrdersEntity> customerOrders){
+        this.customerOrders=customerOrders;
+    }
 
     public List<OrdersEntity> getCustomerOrders() {
         return  customerOrders;
