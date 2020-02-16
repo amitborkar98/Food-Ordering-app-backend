@@ -70,10 +70,10 @@ public class CustomerService {
         }
 
         if (charCount < 1 || dot_count < 1 || a_count < 1){
-            throw new SignUpRestrictedException("(SGR-002", "Invalid email-id format!");
+            throw new SignUpRestrictedException("SGR-002", "Invalid email-id format!");
         }
         else if(not_number_count > 0 || contact.length() != 10 ){
-            throw new SignUpRestrictedException("(SGR-003", "Invalid contact number!");
+            throw new SignUpRestrictedException("SGR-003", "Invalid contact number!");
         }
         else if(upper_case_count < 1 || digit_count < 1 || special_case_count < 1 || password.length() < 8){
             throw new SignUpRestrictedException("SGR-004", "Weak password!");

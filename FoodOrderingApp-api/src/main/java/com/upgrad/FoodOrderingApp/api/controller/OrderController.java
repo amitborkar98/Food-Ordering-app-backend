@@ -66,7 +66,7 @@ public class OrderController {
 
         Date orderDate = new Date();
         Double bill = saveOrderRequest.getBill().doubleValue();
-        Double discount = saveOrderRequest.getDiscount().doubleValue();
+        Double discount = couponEntity.getPercent().doubleValue();
         OrdersEntity ordersEntity = new OrdersEntity(UUID.randomUUID().toString(), bill, couponEntity, discount ,orderDate ,
                 paymentEntity, customerEntity, addressEntity, restaurantEntity);
 
@@ -75,7 +75,7 @@ public class OrderController {
         for(ItemQuantity i : itemQuantities){
             ItemEntity itemEntity = itemService.getItemById(i.getItemId().toString());
             OrderItemEntity orderItemEntity = new OrderItemEntity();
-            orderItemEntity.setPrice(i.getPrice());
+            orderItemEntity.setPrice(itemEntity.getPrice() * i.getQuantity());
             orderItemEntity.setQuantity(i.getQuantity());
             orderItemEntity.setItemEntity(itemEntity);
             orderItemEntity.setOrdersEntity(ordersEntity);

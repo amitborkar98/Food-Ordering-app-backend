@@ -109,7 +109,7 @@ public class AddressService {
             throw new AddressNotFoundException("ANF-005", " Address id can not be empty");
         }
         AddressEntity addressEntity = addressDao.getAddressById(uuid);
-        if(addressEntity == null){
+        if(addressEntity == null || addressEntity.getActive() == 0){
             throw new AddressNotFoundException("ANF-003", "No address by this id");
         }
         List<CustomerAddressEntity>  customerAddressEntities = addressDao.getAllCustomerAddress();

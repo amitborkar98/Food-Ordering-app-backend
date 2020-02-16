@@ -39,6 +39,17 @@ public class ItemEntity implements Serializable {
     @OneToMany(mappedBy = "itemEntity", fetch = FetchType.LAZY)
     List<OrderItemEntity> orderItems = new ArrayList<>();
 
+    @Transient
+    private Integer orderCount = 0;
+
+    public int getOrderCount(){
+        return this.orderCount;
+    }
+
+    public void setOrderCount(int orderCount){
+        this.orderCount = orderCount;
+    }
+
     public List<OrderItemEntity> getOrderItems(){
         return orderItems;
     }

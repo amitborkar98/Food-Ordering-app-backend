@@ -75,12 +75,42 @@ public class ItemService {
                 items.add(i.getItemEntity());
             }
         }
-        List<RestaurantItemEntity> restaurantItemEntities =  restaurantEntity.getRestaurantItems();
-        List<ItemEntity> restaurantItems = new ArrayList<>();
-        for(RestaurantItemEntity i : restaurantItemEntities){
-            restaurantItems.add(i.getItemEntity());
+
+        List<RestaurantItemEntity> restaurantItemEntities = restaurantEntity.getRestaurantItems();
+        List<ItemEntity> itemEntities = new ArrayList<>();
+        for(RestaurantItemEntity s : restaurantItemEntities){
+            itemEntities.add(s.getItemEntity());
         }
-        return items;
+
+        for(ItemEntity i : itemEntities){
+            for(ItemEntity s : items){
+                if(s == i){
+                    i.setOrderCount(i.getOrderCount() + 1);
+                }
+            }
+        }
+
+        List<Integer> itemCounts = new ArrayList<>();
+        for(ItemEntity i : itemEntities){
+            if(i.getOrderCount() != 0){
+                itemCounts.add(i.getOrderCount());
+            }
+        }
+        Collections.sort(itemCounts);
+        Collections.reverse(itemCounts);
+
+        List<ItemEntity> newItems = new ArrayList<>();
+        for(Integer i : itemCounts){
+            for(ItemEntity s : itemEntities){
+                if(i == s.getOrderCount()){
+                    if(!newItems.contains(s)){
+                        newItems.add((s));
+                    }
+                }
+            }
+        }
+
+        return newItems.subList(0,5);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
