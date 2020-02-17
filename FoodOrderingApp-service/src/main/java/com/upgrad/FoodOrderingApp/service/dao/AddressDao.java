@@ -18,6 +18,7 @@ public class AddressDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //get the stateEntity by uuid
     public StateEntity getStateById(final String uuid){
         try {
             return entityManager.createNamedQuery("getStateById", StateEntity.class).setParameter("uuid", uuid).getSingleResult();
@@ -26,6 +27,7 @@ public class AddressDao {
         }
     }
 
+    //get the addressEntity by uuid
     public AddressEntity getAddressById(final String uuid){
         try {
             return entityManager.createNamedQuery("getAdressId", AddressEntity.class).setParameter("uuid", uuid).getSingleResult();
@@ -34,34 +36,41 @@ public class AddressDao {
         }
     }
 
+    //persist the addressEntity in the database
     public AddressEntity saveAdress(AddressEntity addressEntity){
         entityManager.persist(addressEntity);
         return addressEntity;
     }
 
+    //persist the CustomerAddressEntity in the database
     public void createCustomerAdress(CustomerAddressEntity customerAddressEntity){
         entityManager.persist(customerAddressEntity);
     }
 
+    //get a list of all address
     public List<AddressEntity> getAddress(){
         TypedQuery<AddressEntity> query =entityManager.createQuery("SELECT p from AddressEntity p", AddressEntity.class);
         return query.getResultList();
     }
 
+    //get a list of all states
     public List<StateEntity> getAllStates(){
         TypedQuery<StateEntity> query =entityManager.createQuery("SELECT p from StateEntity p", StateEntity.class);
         return query.getResultList();
     }
 
+    //get a list of all Addresses of a customer
     public List<CustomerAddressEntity> getAllCustomerAddress(){
         TypedQuery<CustomerAddressEntity> query =entityManager.createQuery("SELECT p from CustomerAddressEntity p", CustomerAddressEntity.class);
         return query.getResultList();
     }
 
+    //delete a addressEntity from the database
     public void deleteAddress(AddressEntity addressEntity){
         entityManager.remove(addressEntity);
     }
 
+    //update/merge addressEntity in the database
     public AddressEntity updateAddress(AddressEntity addressEntity){
         return entityManager.merge(addressEntity);
     }

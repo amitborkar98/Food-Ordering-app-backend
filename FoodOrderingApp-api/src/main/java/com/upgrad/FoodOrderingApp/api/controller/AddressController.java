@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/")
 public class AddressController {
@@ -32,11 +33,10 @@ public class AddressController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/address", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SaveAddressResponse> saveAddress(@RequestHeader("authorization") final String authorization,
-                                                          final SaveAddressRequest saveAddressRequest) throws AddressNotFoundException, AuthorizationFailedException, SaveAddressException {
+                                                         @RequestBody(required = false) final SaveAddressRequest saveAddressRequest) throws AddressNotFoundException, AuthorizationFailedException, SaveAddressException {
 
         String decode = authorization.split("Bearer ")[1];
         CustomerEntity customerEntity = customerService.getCustomer(decode);
-
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setUuid(UUID.randomUUID().toString());
         addressEntity.setFlatBuilNo(saveAddressRequest.getFlatBuildingName());
@@ -47,9 +47,7 @@ public class AddressController {
         StateEntity stateEntity1 =addressService.getStateByUUIDNotForTest(saveAddressRequest.getStateUuid());
         StateEntity stateEntity = addressService.getStateByUUID("testUUID");
         addressEntity.setState(stateEntity1);
-
         AddressEntity savedAddress = addressService.saveAddress(addressEntity, customerEntity);
-
         SaveAddressResponse addressResponse = new SaveAddressResponse().id(savedAddress.getUuid()).status("ADDRESS SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SaveAddressResponse>(addressResponse, HttpStatus.CREATED);
     }
@@ -103,7 +101,7 @@ public class AddressController {
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/address/{address_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<DeleteAddressResponse> deleteAddress(@RequestHeader("authorization") final String authorization,
-                                                               @PathVariable("address_id") String address_id) throws AuthorizationFailedException, AddressNotFoundException{
+                                                           @RequestBody(required = false) @PathVariable("address_id") String address_id) throws AuthorizationFailedException, AddressNotFoundException{
         String decode = authorization.split("Bearer ")[1];
         CustomerEntity customerEntity = customerService.getCustomer(decode);
         AddressEntity addressEntity = addressService.getAddressByUUID(address_id, customerEntity);

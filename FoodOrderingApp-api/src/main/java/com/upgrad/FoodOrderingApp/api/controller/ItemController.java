@@ -29,28 +29,38 @@ public class ItemController {
     ItemService itemService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/item/restaurant/{restaurant_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ItemListResponse> getItems(@PathVariable("restaurant_id") String restaurant_id) throws RestaurantNotFoundException {
+    public ResponseEntity<ItemListResponse> getItems(@RequestBody(required = false) @PathVariable("restaurant_id") String restaurant_id) throws RestaurantNotFoundException {
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurant_id);
         List<ItemEntity> itemEntities = itemService.getItemsByPopularity(restaurantEntity);
-        List<ItemList> itemLists = new ArrayList<>();
-        for(ItemEntity i : itemEntities){
-            if(i.getType().equals("0")){
-                ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("VEG");
-                ItemList itemList = new ItemList().id(UUID.fromString(i.getUuid())).itemName(i.getItem_name())
-                        .price(i.getPrice()).itemType(typeEnum);
-                itemLists.add(itemList);
-            }
-            else {
-                ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("NON_VEG");
-                ItemList itemList = new ItemList().id(UUID.fromString(i.getUuid())).itemName(i.getItem_name())
-                        .price(i.getPrice()).itemType(typeEnum);
-                itemLists.add(itemList);
-            }
+        //if itemEntities size is 0 return empty list
+        if(itemEntities.size() == 0){
+            ItemListResponse itemListResponse = new ItemListResponse();
+            return new ResponseEntity<ItemListResponse>(itemListResponse, HttpStatus.OK);
         }
-        ItemListResponse itemListResponse = new ItemListResponse();
-        for(ItemList i : itemLists){
-            itemListResponse.add(i);
+        else{
+            List<ItemList> itemLists = new ArrayList<>();
+            for(ItemEntity i : itemEntities){
+                //if item type is 0
+                if(i.getType().equals("0")){
+                    ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("VEG");
+                    ItemList itemList = new ItemList().id(UUID.fromString(i.getUuid())).itemName(i.getItem_name())
+                            .price(i.getPrice()).itemType(typeEnum);
+                    itemLists.add(itemList);
+                }
+                //if item type is 1
+                else {
+                    ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("NON_VEG");
+                    ItemList itemList = new ItemList().id(UUID.fromString(i.getUuid())).itemName(i.getItem_name())
+                            .price(i.getPrice()).itemType(typeEnum);
+                    itemLists.add(itemList);
+                }
+            }
+            ItemListResponse itemListResponse = new ItemListResponse();
+            for(ItemList i : itemLists){
+                itemListResponse.add(i);
+            }
+            return new ResponseEntity<ItemListResponse>(itemListResponse, HttpStatus.OK);
         }
-        return new ResponseEntity<ItemListResponse>(itemListResponse, HttpStatus.OK);
     }
+
 }

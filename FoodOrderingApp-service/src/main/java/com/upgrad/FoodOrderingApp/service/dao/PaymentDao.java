@@ -14,11 +14,13 @@ public class PaymentDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //get the list of all payments
     public List<PaymentEntity> getAllPayments(){
         TypedQuery<PaymentEntity> query =entityManager.createQuery("SELECT p from PaymentEntity p", PaymentEntity.class);
         return query.getResultList();
     }
 
+    //get the paymentEntity by uuid
     public PaymentEntity getPaymentById(String uuid){
         try {
             return entityManager.createNamedQuery("getPaymentById", PaymentEntity.class).setParameter("uuid", uuid).getSingleResult();

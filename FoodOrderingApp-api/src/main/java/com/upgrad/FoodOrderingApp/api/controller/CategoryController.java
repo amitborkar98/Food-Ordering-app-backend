@@ -30,6 +30,7 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET, path = "/category", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CategoriesListResponse> getCategories(){
         List<CategoryEntity> categoryEntities = categoryService.getAllCategoriesOrderedByName();
+        //if categories size is 0 return null
         if(categoryEntities.size() == 0){
             CategoriesListResponse categoriesListResponse = new CategoriesListResponse().categories(null);
             return new ResponseEntity<CategoriesListResponse>(categoriesListResponse, HttpStatus.OK);
@@ -46,18 +47,19 @@ public class CategoryController {
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/category/{category_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<CategoryDetailsResponse> getCategoryById(@PathVariable("category_id") String category_id) throws CategoryNotFoundException {
-
+    public ResponseEntity<CategoryDetailsResponse> getCategoryById(@RequestBody(required = false) @PathVariable("category_id") String category_id) throws CategoryNotFoundException {
         CategoryEntity categoryEntity = categoryService.getCategoryById(category_id);
         List<ItemEntity> items = categoryEntity.getItems();
         List<ItemList> itemLists = new ArrayList<>();
         for(ItemEntity i : items){
+            //if item type is 0
             if(i.getType().equals("0")){
                 ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("VEG");
                 ItemList itemList = new ItemList().id(UUID.fromString(i.getUuid())).price(i.getPrice())
                         .itemName(i.getItem_name()).itemType(typeEnum);
                 itemLists.add(itemList);
             }
+            //if item type is 1
             else {
                 ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("NON_VEG");
                 ItemList itemList = new ItemList().id(UUID.fromString(i.getUuid())).price(i.getPrice())

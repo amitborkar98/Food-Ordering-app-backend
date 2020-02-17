@@ -25,11 +25,15 @@ public class CategoryService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<CategoryEntity> getCategoriesByRestaurant(String uuid){
+        //get the restaurantEntity
         RestaurantEntity restaurantEntity = restaurantDao.getRestaurantById(uuid);
+        //get the restaurantCategoryEntity
         List<RestaurantCategoryEntity> restaurantCategoryEntities = restaurantDao.getAllRestaurantCategories();
         List<CategoryEntity> categories = new ArrayList<>();
         for(RestaurantCategoryEntity s : restaurantCategoryEntities){
+            //check if the retaurant in the restaurant category list is same as the given restaurant
             if(s.getRestaurantEntity() == restaurantEntity){
+                //add the categories of the restaurant in the category list
                 categories.add(s.getCategories());
             }
         }
@@ -43,19 +47,23 @@ public class CategoryService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CategoryEntity getCategoryById(String category_id)throws CategoryNotFoundException {
+        //check if the category_id is null
         if(category_id == null){
             throw new CategoryNotFoundException("CNF-001", "Category id field should not be empty");
         }
         CategoryEntity categoryEntity = categoryDao.getCategoryById(category_id);
+        //check if the category is the database
         if(categoryEntity == null){
             throw new CategoryNotFoundException("CNF-002", "No category by this id");
         }
-
+        //get the list of all category items
         List<CategoryItemEntity> categoryItemEntities = categoryEntity.getCategoryItems();
         List<ItemEntity> items = new ArrayList<>();
         for (CategoryItemEntity s : categoryItemEntities){
+            //add all the items from the category items list to the items list
             items.add(s.getItemEntity());
         }
+        //set the items of the category
         categoryEntity.setItems(items);
         return categoryEntity;
     }

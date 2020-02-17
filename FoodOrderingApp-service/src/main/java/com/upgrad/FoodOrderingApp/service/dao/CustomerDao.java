@@ -14,15 +14,18 @@ public class CustomerDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //persist the customerEntity in database
     public CustomerEntity createCustomer(CustomerEntity customerEntity){
         entityManager.persist(customerEntity);
         return customerEntity;
     }
 
+    //merge/update the customerEntity in database
     public CustomerEntity updateCustomer(CustomerEntity customerEntity){
         return entityManager.merge(customerEntity);
     }
 
+    //get the customerEntity by contact_no from the database
     public CustomerEntity getCustomerByContact(final String contact_number){
         try {
             return entityManager.createNamedQuery("customerByContact", CustomerEntity.class).setParameter("contact_number", contact_number).getSingleResult();
@@ -31,6 +34,7 @@ public class CustomerDao {
         }
     }
 
+    //get the customerEntity by uuid from the database
     public CustomerEntity getCustomerById(final String uuid){
         try {
             return entityManager.createNamedQuery("customerById", CustomerEntity.class).setParameter("uuid", uuid).getSingleResult();
@@ -39,15 +43,18 @@ public class CustomerDao {
         }
     }
 
+    //persist the customerAuthEntity in  database
     public CustomerAuthEntity createToken(final CustomerAuthEntity customerAuthEntity) {
         entityManager.persist(customerAuthEntity);
         return customerAuthEntity;
     }
 
+    //merge/update the customerAuthEntity in database
     public void updateToken (final CustomerAuthEntity customerAuthEntity){
         entityManager.merge(customerAuthEntity);
     }
 
+    //get the customerAuthEntity by access-token from the database
     public CustomerAuthEntity getCustomerAuth(final String access_token) {
         try {
             return entityManager.createNamedQuery("getCustomerToken", CustomerAuthEntity.class).setParameter("access_token", access_token).getSingleResult();

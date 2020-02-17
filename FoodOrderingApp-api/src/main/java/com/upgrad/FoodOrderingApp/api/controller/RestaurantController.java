@@ -87,10 +87,11 @@ public class RestaurantController {
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/restaurant/name/{reastaurant_name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RestaurantListResponse> getRestaurantsByName(@PathVariable("reastaurant_name") final String reastaurant_name)
+    public ResponseEntity<RestaurantListResponse> getRestaurantsByName(@RequestBody(required = false) @PathVariable("reastaurant_name") final String reastaurant_name)
                                                                     throws RestaurantNotFoundException{
 
         List<RestaurantEntity> restaurantEntities = restaurantService.restaurantsByName(reastaurant_name);
+        //if restaurantEntities size is 0, return an empty list
         if(restaurantEntities.size() == 0){
             RestaurantListResponse restaurantListResponse = new RestaurantListResponse().restaurants(Collections.emptyList());
             return new ResponseEntity<RestaurantListResponse>(restaurantListResponse, HttpStatus.OK);
@@ -111,6 +112,7 @@ public class RestaurantController {
                 for(CategoryEntity o : categoryEntities){
                     category_names.add(o.getCategory_name());
                 }
+                //sorting the category names
                 Collections.sort(category_names);
                 StringBuilder sb = new StringBuilder();
                 String comma = ",";
@@ -139,9 +141,10 @@ public class RestaurantController {
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/restaurant/category/{category_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RestaurantListResponse> getRestaurantsByCategory(@PathVariable("category_id") final String category_id)
+    public ResponseEntity<RestaurantListResponse> getRestaurantsByCategory(@RequestBody(required = false) @PathVariable("category_id") final String category_id)
             throws CategoryNotFoundException {
         List<RestaurantEntity> restaurantEntities = restaurantService.restaurantByCategory(category_id);
+        //if restaurantEntities size is 0, return an empty list
         if(restaurantEntities.size() == 0){
             RestaurantListResponse restaurantListResponse = new RestaurantListResponse().restaurants(Collections.emptyList());
             return new ResponseEntity<RestaurantListResponse>(restaurantListResponse, HttpStatus.OK);
@@ -162,6 +165,7 @@ public class RestaurantController {
                 for(CategoryEntity o : categoryEntities){
                     category_names.add(o.getCategory_name());
                 }
+                //sorting category names
                 Collections.sort(category_names);
                 StringBuilder sb = new StringBuilder();
                 String comma = ",";
@@ -201,6 +205,7 @@ public class RestaurantController {
 
             List<ItemList> itemLists = new ArrayList<>();
             for(ItemEntity o : itemEntities){
+                //if item type is 0
                 if(o.getType().equals("0")){
                     ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("VEG");
                     ItemList itemList = new ItemList().id(UUID.fromString(o.getUuid())).itemName(o.getItem_name()).price(o.getPrice())
@@ -208,6 +213,7 @@ public class RestaurantController {
                     itemLists.add(itemList);
                 }
                 else{
+                    //if item type is 1
                     ItemList.ItemTypeEnum typeEnum = ItemList.ItemTypeEnum.valueOf("NON_VEG");
                     ItemList itemList = new ItemList().id(UUID.fromString(o.getUuid())).itemName(o.getItem_name()).price(o.getPrice())
                             .itemType(typeEnum);
@@ -252,8 +258,8 @@ public class RestaurantController {
 
 
     @RequestMapping(method = RequestMethod.PUT, path = "/api/restaurant/{restaurant_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RestaurantUpdatedResponse> updateRestaurant( @RequestParam("Customer Rating") double customer_ratings,
-                                                                       @PathVariable("restaurant_id") final String restaurant_id,
+    public ResponseEntity<RestaurantUpdatedResponse> updateRestaurant(@RequestBody(required = false) @RequestParam("Customer Rating") double customer_ratings,
+                                                                      @RequestBody(required = false)  @PathVariable("restaurant_id") final String restaurant_id,
                                                                       @RequestHeader("authorization") final String authorization)
             throws AuthorizationFailedException, InvalidRatingException, RestaurantNotFoundException {
         String decode = authorization.split("Bearer ")[1];

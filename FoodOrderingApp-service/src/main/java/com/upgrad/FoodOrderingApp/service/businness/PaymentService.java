@@ -24,7 +24,8 @@ public class PaymentService {
     @Transactional(propagation = Propagation.REQUIRED)
     public PaymentEntity getPaymentByUUID(String payment_id) throws PaymentMethodNotFoundException{
         PaymentEntity paymentEntity = paymentDao.getPaymentById(payment_id);
-        if(paymentEntity == null){
+        //check if the payment is in the database or the payment id is null
+        if(paymentEntity == null || payment_id.equals("")){
             throw new PaymentMethodNotFoundException("PNF-002", "No payment method found by this id");
         }
         return paymentEntity;

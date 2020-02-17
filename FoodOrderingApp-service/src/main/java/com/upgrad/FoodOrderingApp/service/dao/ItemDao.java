@@ -12,6 +12,7 @@ public class ItemDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //get the itemEntity by uuid
     public ItemEntity getItemById(final String uuid){
         try {
             return entityManager.createNamedQuery("getItemById", ItemEntity.class).setParameter("uuid", uuid).getSingleResult();

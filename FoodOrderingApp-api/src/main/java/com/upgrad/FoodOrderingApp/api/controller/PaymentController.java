@@ -27,7 +27,6 @@ public class PaymentController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/payment", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<PaymentListResponse> getPayments(){
-
         List<PaymentEntity> paymentEntities = paymentService.getAllPaymentMethods();
         List<PaymentResponse> payments = new ArrayList<>();
         for(PaymentEntity i : paymentEntities){

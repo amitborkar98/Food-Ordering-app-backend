@@ -27,10 +27,12 @@ public class OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CouponEntity getCouponByCouponName(String coupon_name) throws CouponNotFoundException{
+        //check if the coupon_name is null
         if(coupon_name == null){
             throw new CouponNotFoundException("CPF-002", "Coupon name field should not be empty");
         }
         CouponEntity couponEntity = orderDao.getCouponByName(coupon_name);
+        //check if the coupon is in the database
         if(couponEntity == null){
             throw new CouponNotFoundException("CPF-001", "No coupon by this name");
         }
@@ -40,6 +42,7 @@ public class OrderService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CouponEntity getCouponByCouponId(String coupon_id) throws  CouponNotFoundException{
         CouponEntity couponEntity = orderDao.getCouponById(coupon_id);
+        //check if the coupon is in the database
         if(couponEntity == null){
             throw new CouponNotFoundException("CPF-002", "No coupon by this id");
         }
@@ -58,8 +61,11 @@ public class OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<OrdersEntity> getOrdersByCustomers(String customer_id){
+        //get the customer by id
         CustomerEntity customerEntity = customerDao.getCustomerById(customer_id);
+        //get all the orders of that customer
         List<OrdersEntity> orders = customerEntity.getCustomerOrders();
+        //reverse the order list to get the latest order first
         Collections.reverse(orders);
         return orders;
     }

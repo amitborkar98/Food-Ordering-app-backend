@@ -41,7 +41,7 @@ public class OrderController {
     ItemService itemService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/order/coupon/{coupon_name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<CouponDetailsResponse> getCouponByName(@PathVariable("coupon_name") String coupon_name,
+    public ResponseEntity<CouponDetailsResponse> getCouponByName(@RequestBody(required = false) @PathVariable("coupon_name") String coupon_name,
                                                     @RequestHeader("authorization") String authorization) throws AuthorizationFailedException,CouponNotFoundException {
         String decode = authorization.split("Bearer ")[1];
         customerService.getCustomer(decode);
@@ -53,36 +53,37 @@ public class OrderController {
 
 
     @RequestMapping(method = RequestMethod.POST, path = "/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SaveOrderResponse> saveOrder(final SaveOrderRequest saveOrderRequest,
-                                                       @RequestHeader("authorization") String authorization)
+    public ResponseEntity<SaveOrderResponse> saveOrder(@RequestHeader("authorization") String authorization,
+                                                       @RequestBody(required = false) final SaveOrderRequest saveOrderRequest)
             throws AuthorizationFailedException, RestaurantNotFoundException, CouponNotFoundException, ItemNotFoundException,
             AddressNotFoundException, PaymentMethodNotFoundException {
         String decode = authorization.split("Bearer ")[1];
         CustomerEntity customerEntity = customerService.getCustomer(decode);
         PaymentEntity paymentEntity = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
         AddressEntity addressEntity = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), customerEntity);
-        RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
-        CouponEntity couponEntity = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
-
-        Date orderDate = new Date();
-        Double bill = saveOrderRequest.getBill().doubleValue();
-        Double discount = couponEntity.getPercent().doubleValue();
-        OrdersEntity ordersEntity = new OrdersEntity(UUID.randomUUID().toString(), bill, couponEntity, discount ,orderDate ,
-                paymentEntity, customerEntity, addressEntity, restaurantEntity);
 
         List<ItemQuantity> itemQuantities = saveOrderRequest.getItemQuantities();
         List<OrderItemEntity> orderItems = new ArrayList<>();
         for(ItemQuantity i : itemQuantities){
             ItemEntity itemEntity = itemService.getItemById(i.getItemId().toString());
             OrderItemEntity orderItemEntity = new OrderItemEntity();
-            orderItemEntity.setPrice(itemEntity.getPrice() * i.getQuantity());
+            orderItemEntity.setPrice(i.getPrice());
             orderItemEntity.setQuantity(i.getQuantity());
             orderItemEntity.setItemEntity(itemEntity);
-            orderItemEntity.setOrdersEntity(ordersEntity);
             orderItems.add(orderItemEntity);
         }
+
+        RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
+        CouponEntity couponEntity = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
+        Date orderDate = new Date();
+        Double bill = saveOrderRequest.getBill().doubleValue();
+        Double discount = saveOrderRequest.getDiscount().doubleValue();
+        OrdersEntity ordersEntity = new OrdersEntity(UUID.randomUUID().toString(), bill, couponEntity, discount ,orderDate ,
+                paymentEntity, customerEntity, addressEntity, restaurantEntity);
+
         OrdersEntity savedOrder = orderService.saveOrder(ordersEntity);
         for(OrderItemEntity i : orderItems){
+            i.setOrdersEntity(ordersEntity);
             orderService.saveOrderItem(i);
         }
         SaveOrderResponse saveOrderResponse = new SaveOrderResponse().id(savedOrder.getUuid()).status("ORDER SUCCESSFULLY PLACED");
@@ -124,6 +125,7 @@ public class OrderController {
             for(OrderItemEntity s : orderItems){
                 ItemEntity itemEntity = s.getItemEntity();
                 ItemQuantityResponseItem itemQuantityResponseItem = new ItemQuantityResponseItem();
+                //if item type is 0
                 if(itemEntity.getType().equals("0")){
                     ItemQuantityResponseItem.TypeEnum typeEnum = ItemQuantityResponseItem.TypeEnum.valueOf("VEG");
                     itemQuantityResponseItem.setId(UUID.fromString(itemEntity.getUuid()));
@@ -131,6 +133,7 @@ public class OrderController {
                     itemQuantityResponseItem.setItemPrice(itemEntity.getPrice());
                     itemQuantityResponseItem.setType(typeEnum);
                 }
+                //if item type is 1
                 else {
                     ItemQuantityResponseItem.TypeEnum typeEnum = ItemQuantityResponseItem.TypeEnum.valueOf("NON_VEG");
                     itemQuantityResponseItem.setId(UUID.fromString(itemEntity.getUuid()));

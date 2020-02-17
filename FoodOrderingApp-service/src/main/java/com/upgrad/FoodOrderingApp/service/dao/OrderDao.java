@@ -15,6 +15,7 @@ public class OrderDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //get couponEntity by coupon_name
     public CouponEntity getCouponByName(String coupon_name){
         try {
             return entityManager.createNamedQuery("getCouponByName", CouponEntity.class).setParameter("coupon_name", coupon_name).getSingleResult();
@@ -23,6 +24,7 @@ public class OrderDao {
         }
     }
 
+    //get couponEntity by coupon_name
     public CouponEntity getCouponById(String uuid){
         try {
             return entityManager.createNamedQuery("getCouponById", CouponEntity.class).setParameter("uuid", uuid).getSingleResult();
@@ -31,11 +33,13 @@ public class OrderDao {
         }
     }
 
+    //persist the orderEntity in the database
     public OrdersEntity saveOrder(OrdersEntity ordersEntity){
         entityManager.persist(ordersEntity);
         return ordersEntity;
     }
 
+    //persist the orderItemEntity in the database
     public OrderItemEntity saveOrderItem(OrderItemEntity orderItemEntity){
         entityManager.persist(orderItemEntity);
         return orderItemEntity;
